@@ -16,7 +16,6 @@
   - [3.1 Synthesizing the user research](#31-synthesizing-the-user-research)
     - [Persona 1: Teaching Assistant (HF, 26, Computer Science TA)](#persona-1-teaching-assistant-hf-26-computer-science-ta)
     - [Persona 2: Colorblind Student (MZ, 19, Engineering Major, Deuteranopia)](#persona-2-colorblind-student-mz-19-engineering-major-deuteranopia)
-    - [Insights from Experts](#insights-from-experts)
     - [Process map:](#process-map)
       - [Current Process: TA Creating Slides](#current-process-ta-creating-slides)
       - [Current Process: Colorblind Student Interacting with Slides](#current-process-colorblind-student-interacting-with-slides)
@@ -60,7 +59,7 @@ Our research protocol is as follows:
 ### Recruitment strategy: 
 - **Whom to contact:** colorblind students, TAs, and specialists from the UCLA Center for Accessible Education (CAE)
 - **How to contact:** recruit colorblind students from two public forums; TA from UCLA CS departments
-- **How many:** 3 colorblind students, 7 TAs, and 2 specialists 
+- **How many:** 3 colorblind students, 7 TAs, and 1 specialist 
 ### Time and place: 
 Depending on participants’ preference, we can conduct interviews online or in-person
 ### Roles: 
@@ -80,6 +79,12 @@ Depending on participants’ preference, we can conduct interviews online or in-
 - Features they would appreciate the most: automated feedback, patterns/texture suggestions, contrast suggestions.
 
 ## 2.3 User research with the experts
+- **Material Modifications**: CAE assists students with color blindness by adjusting course materials, such as slides and books, to improve readability based on individual needs.
+- **Graph & Chart Adaptation**: Visual materials can be converted into SVG format, with color adjustments and pattern additions in Adobe Illustrator to enhance accessibility.
+- **Bruin Learn Accessibility Checks**: The platform automatically assesses uploaded materials for accessibility, notifying instructors if modifications are needed.
+- **Consultation & Future Improvements**: The Disabilities & Computing Program (DCP) offers additional insights, and future efforts could explore independent tools to help students manage accessibility challenges on their own.
+- [Interview Notes with CAE](https://docs.google.com/document/d/1nwWAMbkGigzIjuZQaNEsDpV4zZs978v_9pjvLlMQpuo/edit?usp=sharing)
+
 
 # 3. Insights from user research
 
@@ -105,13 +110,6 @@ HF is preparing slides for a discussion section. He uses red and green to distin
 - **Scenario 2:**
 MZ is attending a discussion session. The TA shows a barplot where key bars are distinguished using red and green dots. MZ struggles to differentiate them and loses time figuring it out, missing other explanations.
 
-### Insights from Experts
-
-The Center for Accessible Education (CAE) at UCLA provides tailored accommodations for students with color blindness, ensuring equitable access to learning materials. Key services include material conversion (adjusting slides and books based on individual needs) and graph adaptation using Scalable Vector Graphics (SVG) and Adobe Illustrator to modify colors and add patterns for better visibility.
-Bruin Learn, UCLA’s course platform, includes automated accessibility checks, prompting instructors to modify materials if needed. Additionally, the Disabilities & Computing Program (DCP) offers further expertise on accessibility tools like Ally.
-Key takeaways include the effectiveness of patterns in charts, the need for customized material adjustments, and the role of automated tools in enhancing accessibility. Future opportunities lie in developing independent accessibility solutions for students, further leveraging DCP resources, and gathering user feedback on current accommodations.
-
-[Interview Notes with CAE](https://docs.google.com/document/d/1nwWAMbkGigzIjuZQaNEsDpV4zZs978v_9pjvLlMQpuo/edit?usp=sharing)
 
 ### Process map:
 We also synthesize our research into a process map that shows the current steps TAs and colorblind students take when working with slides and the pain points they encounter.
@@ -132,7 +130,7 @@ We also synthesize our research into a process map that shows the current steps 
 - TA doesn’t check for accessibility because they don’t know it’s an issue (lack of awareness) or don’t want to waste time doing so.
 - Colorblind students might struggle but don’t report it, perpetuating the problem.
 
-## 3.2 Problem statemement
+## 3.2 Problem Statement
 TAs often unknowingly create lecture slides with figures that rely on color differentiation, making them difficult for colorblind students to interpret. Because TAs are unaware of the issue and colorblind students tend to find workarounds themselves and not to report it, this results in a persistent accessibility gap where students struggle to understand visual materials efficiently.
 
 ### Core Tension:
