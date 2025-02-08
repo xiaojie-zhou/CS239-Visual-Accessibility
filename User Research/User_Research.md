@@ -16,6 +16,7 @@
   - [3.1 Synthesizing the user research](#31-synthesizing-the-user-research)
     - [Persona 1: Teaching Assistant (HF, 26, Computer Science TA)](#persona-1-teaching-assistant-hf-26-computer-science-ta)
     - [Persona 2: Colorblind Student (MZ, 19, Engineering Major, Deuteranopia)](#persona-2-colorblind-student-mz-19-engineering-major-deuteranopia)
+    - [Insights from Experts](#insights-from-experts)
     - [Process map:](#process-map)
       - [Current Process: TA Creating Slides](#current-process-ta-creating-slides)
       - [Current Process: Colorblind Student Interacting with Slides](#current-process-colorblind-student-interacting-with-slides)
@@ -103,6 +104,14 @@ HF is preparing slides for a discussion section. He uses red and green to distin
   - Takes extra time to understand slides, often falling behind in lectures.
 - **Scenario 2:**
 MZ is attending a discussion session. The TA shows a barplot where key bars are distinguished using red and green dots. MZ struggles to differentiate them and loses time figuring it out, missing other explanations.
+
+### Insights from Experts
+
+The Center for Accessible Education (CAE) at UCLA provides tailored accommodations for students with color blindness, ensuring equitable access to learning materials. Key services include material conversion (adjusting slides and books based on individual needs) and graph adaptation using Scalable Vector Graphics (SVG) and Adobe Illustrator to modify colors and add patterns for better visibility.
+Bruin Learn, UCLA’s course platform, includes automated accessibility checks, prompting instructors to modify materials if needed. Additionally, the Disabilities & Computing Program (DCP) offers further expertise on accessibility tools like Ally.
+Key takeaways include the effectiveness of patterns in charts, the need for customized material adjustments, and the role of automated tools in enhancing accessibility. Future opportunities lie in developing independent accessibility solutions for students, further leveraging DCP resources, and gathering user feedback on current accommodations.
+
+[Interview Notes with CAE](https://docs.google.com/document/d/1nwWAMbkGigzIjuZQaNEsDpV4zZs978v_9pjvLlMQpuo/edit?usp=sharing)
 
 ### Process map:
 We also synthesize our research into a process map that shows the current steps TAs and colorblind students take when working with slides and the pain points they encounter.
