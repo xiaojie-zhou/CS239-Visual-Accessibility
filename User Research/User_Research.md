@@ -70,8 +70,13 @@ Depending on participants’ preference, we can conduct interviews online or in-
 # 2. Conducting user research
 
 ## 2.1 User research with the colorblind students
+- All three student participants are hesitant to voice their issue to lecturers/TAs. They can workaround by using external tools such as ChatGPT or built-in accessibility tools on the phone. One of the participants also chooses to ask friends for help in class.
 
 ## 2.2 User research with Teaching Assistants
+- Almost all TAs except one do not check the color accessibility of their slides due to unawareness of tools and limited time budget (ideally within 5 minutes).
+- Most used graph types: line charts, bar plot, heatmaps
+- The tool needs to be highly automated. 
+- Features they would appreciate the most: automated feedback, patterns/texture suggestions, contrast suggestions.
 
 ## 2.3 User research with the experts
 
@@ -163,3 +168,19 @@ While these tools provide valuable support in enhancing accessibility, they do n
 
 
 # 5. Reflection
+## Look back at your assumptions (in the “Before you get started with users” section). Has your user research contradicted or challenged any of these assumptions? If so, which ones? How?
+One of our assumptions: TA/Lecturers might not pay attention to the accessibility issue in their figures. Our user research challenged this assumption - according to our user research, 4 out of 7 TA participants have received training on visual accessibilities for course materials and all of them are at least “somewhat aware” of the fact that color blindness can be a barrier to learning. However, in reality, only one of the participants would actually check for the accessibility of their teaching materials.
+
+## What does your user research tell you about what kinds of interactive systems/solutions are unlikely to be useful/successful? Why not? Any hypotheses about what features of an interactive system will be useful? Why?
+The tool shall be highly automated and easy to use, and be able to reduce the time overhead of preparation of teaching materials as much as possible.
+Features that will be useful (according to their response): automated feedback, patterns/texture suggestions, contrast suggestions
+
+## What questions do you have about your users? What hunches or hypotheses do you have about promising solutions? What is one thing you can do to begin answering these questions? 
+We are wondering what “automated feedback” our users will find the most useful. Our hypothesis is that the ideal feedback should not only include suggestions, but also provide the augmented version of graphs. We can begin answering the questions by implementing the tool and asking users for feedback.
+
+## Did you use a generative AI tool for any part of this assignment? If so, which one and how?
+Yes, we used ChatGPT to check the grammar and rephrase our response.
+
+## How much time did you spend on this assignment as a group? Individually? 
+- Group: Group meetings 2hrs
+- Indivisually: interview & result analysis 1hr, doc writeup 2hrs
