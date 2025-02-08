@@ -158,5 +158,8 @@ While these tools provide valuable support in enhancing accessibility, they do n
 
 
 # 4. Blog
+[Read Our Blog in Details](./Blog.md)
+
+
 
 # 5. Reflection
