@@ -190,6 +190,6 @@ Yes, we used ChatGPT to check the grammar and rephrase our response.
 
 ## How much time did you spend on this assignment as a group? Individually? 
 - Group: Group meetings 2hrs
-- Indivisually: interview & result analysis 1hr, doc writeup 2hrs
+- Indivisually: interview & result analysis 2 hr, looking for expert's office and got lost on campus: 0.5 hr, doc writeup 2hrs
 
 [Other Files](https://drive.google.com/drive/folders/16T6kz0tmCIGhe_noRPTMJFFugdTrpqql?usp=sharing)
