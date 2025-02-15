@@ -30,6 +30,17 @@ We interviewed three color-blind students to understand their challenges, seven 
 ## Problem Statement
 TAs often unknowingly create lecture slides with figures that rely on color differentiation, making them difficult for color-blind students to interpret. Because TAs are unaware of the issue and color-blind students tend to find workarounds themselves and not report it, this results in a persistent accessibility gap where students struggle to understand visual materials efficiently.
 
+## Storyboard
+To illustrate the workflow of our tool, we have developed a storyboard that outlines the key steps involved in improving the accessibility of presentation slides for colorblind individuals.
+
+This storyboard demonstrates how a TA can use the tool to detect and resolve color-based accessibility issues in figures, ensuring that students with color vision deficiencies can better understand the material.
+
+The process begins with a common accessibility issue—students struggle to interpret certain figures in the slides due to colorblindness. To address this, the TA uploads the slides to the tool, which then scans the figures for potential color-related accessibility issues, such as red-green confusion. The tool identifies problematic visuals and provides recommendations for improvements, such as adding patterns or textures, adjusting color contrast, or incorporating alternative annotations. With these suggestions, the TA makes necessary adjustments, resulting in more accessible slides that enhance student comprehension.
+
+The following storyboard visually represents this process:
+
+![Storyboard from Visual Accessibility Group](./storyboard.png)
+
 ## Proposed Solution
 We propose a standalone web-based tool that scans slides for color accessibility issues and suggests improvements. The tool would:
 - Analyze uploaded slides for colorblind accessibility issues.
