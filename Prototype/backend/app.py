@@ -4,4 +4,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return "<p>Hello, World!</p>"
+    return "Hello, World!"
+
+@app.route("/generate", methods=["POST"])
+def generate():
+    return # Processed Pic
