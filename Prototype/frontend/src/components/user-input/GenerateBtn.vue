@@ -49,7 +49,6 @@
   }
   
   .button.disabled {
-    opacity: 0.6; /* Slightly faded effect */
+    opacity: 0.6;
   }
   </style>
-  

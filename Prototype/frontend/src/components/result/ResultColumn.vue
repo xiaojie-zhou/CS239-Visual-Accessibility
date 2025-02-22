@@ -1,5 +1,12 @@
+<script setup>
+import NoAdjustment from './NoAdjustment.vue'
+import AdjustmentApplied from './AdjustmentApplied.vue'
+</script>
+
 <template>
     <div class="right-column">
+      <!-- TODO -->
+      <AdjustmentApplied />
     </div>
 </template>
 

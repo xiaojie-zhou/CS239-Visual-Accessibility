@@ -1,0 +1,49 @@
+<template>
+    <button 
+      class="button" 
+      @click="handleClick">
+      <img src="@/components/icons/info-svgrepo-com.svg" class="icon" alt="Info Icon" />
+    </button>
+</template>
+  
+<script setup>
+    const handleClick = () => { // TODO
+    console.log("Info btn clicked")
+    };
+</script>
+
+<style scoped>
+    .button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        border: 2px solid #3498db;
+        background-color: white;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .button:hover {
+        background-color: #3498db;
+    }
+
+    .button:focus {
+        outline: none;
+    }
+
+    .icon {
+        width: 25px;
+        height: 25px;
+        filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
+        /* TODO: color not accurate */
+    }
+
+    .button:hover .icon {
+        filter: invert(100%) sepia(0%) saturate(0%) brightness(200%) contrast(100%);
+    }
+</style>
