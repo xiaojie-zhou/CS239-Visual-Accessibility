@@ -109,12 +109,11 @@ To achieve this, the tool should provide quick, intuitive suggestions that requi
 - Feb. 24 – Feb. 26: Backend 1 & 2, Frontend 1 (done) & 2
 - Feb. 27 – Mar. 3: Backend 3 & 4, Frontend 3
 
-## What did each member contribute to this phase of the project?
+## Individual Contributions
 - Tiffany: prototype design, frontend web dev
 - Xiaojie: backend web dev
 - Shanmu: algorithm research
-
-All three of us converting pics, adding patterns
+- All three of us converting pics, adding patterns
 
 
 # Did you use a generative AI tool? If so, which and how?
