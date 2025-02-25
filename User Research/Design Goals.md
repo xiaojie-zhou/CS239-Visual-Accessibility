@@ -92,3 +92,34 @@ To help instructors design with accessibility in mind, the tool should prioritiz
 Instructors, especially TAs, are often pressed for time and may not have the capacity for lengthy accessibility checks (Relevant Factor: Habit). Many existing accessibility tools require specialized knowledge or extra steps, which can discourage instructors from using them regularly. To be effective, this tool needs to be simple, fast, and easy to integrate into an instructor’s existing workflow.
 
 To achieve this, the tool should provide quick, intuitive suggestions that require minimal effort to apply. Instead of forcing users to learn complex accessibility guidelines, it should offer a one-click accessibility check that provides immediate feedback. Any recommendations should be presented in clear, non-technical language so that instructors can make changes without needing additional training. The tool should also work seamlessly with commonly used platforms like PowerPoint, LaTeX, and Python, ensuring that instructors don’t have to change their existing workflow just to make their materials accessible. By keeping the process simple and efficient, the tool will encourage more instructors to adopt accessibility best practices as part of their routine.
+
+# Implementation Plan:
+## Backend: 
+1. A tool to detect what problems in the uploaded figure
+2. A script that can convert the figure into the same format which facilitates the following processing
+3. A script that converts the figure into grayscale. (Golden Examples: Convert barplot, line chart, Heatmap into grayscale)
+   1. Continue to support other conversions
+4. A script that adds patterns to the barplot (Golden Example: adding pattern to a red-green barplot)
+## Frontend:
+1. Static UI implementation
+2. Interactive UI handling file upload, download, and state changes
+3. Linking frontend to backend
+
+## The frontend and backend and be implemented in parallel:
+- Feb. 24 – Feb. 26: Backend 1 & 2, Frontend 1 (done) & 2
+- Feb. 27 – Mar. 3: Backend 3 & 4, Frontend 3
+
+## What did each member contribute to this phase of the project?
+- Tiffany: prototype design, frontend web dev
+- Xiaojie: backend web dev
+- Shanmu: algorithm research
+
+All three of us converting pics, adding patterns
+
+
+# Did you use a generative AI tool? If so, which and how?
+
+Yes, we use a generative AI tool to rephrase our responses.
+
+# How much time did you spend on this assignment
+As a group, we spent approximately one hour on this assignment, while individually, each member spent around one to two hours.
