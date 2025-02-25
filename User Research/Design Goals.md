@@ -7,9 +7,12 @@ As a result, an ongoing accessibility gap remains, with affected students strugg
 
 
 # Paper prototype:
-<iframe src="https://embed.figma.com/proto/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?node-id=1-31&p=f&t=xUsRHa7KvmT68NWZ-0&embed-host=github" allowfullscreen></iframe>
+[<img src="Proto.png" width=50% height=50%>](https://www.figma.com/proto/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?content-scaling=fixed&kind=proto&node-id=1-31&scaling=scale-down)
 
-<iframe src="https://embed.figma.com/design/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?embed-host=github" allowfullscreen></iframe>
+
+
+[//]: # (<iframe width="100%" height="475" src="https://embed.figma.com/proto/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?node-id=1-31&p=f&t=xUsRHa7KvmT68NWZ-0&embed-host=github" allowfullscreen></iframe>)
+[//]: # (<iframe width="100%" height="475" src="https://embed.figma.com/design/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?embed-host=github" allowfullscreen></iframe>)
 
 
 # Takeaways from the feedback:
