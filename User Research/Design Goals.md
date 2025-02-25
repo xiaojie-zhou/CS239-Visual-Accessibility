@@ -1,6 +1,9 @@
 [+1] Create a paper prototype. Take + upload pictures or a video of your paper prototype.
 
-<iframe src="https://embed.figma.com/design/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?embed-host=figma-embed-docs"></iframe>
+<iframe src="https://embed.figma.com/proto/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?node-id=1-31&p=f&t=xUsRHa7KvmT68NWZ-0&embed-host=github" allowfullscreen></iframe>
+
+<iframe src="https://embed.figma.com/design/66YLf7nN2Ez0BIp0FIVnY4/Color-Vision-Accessibility-Tool?embed-host=github" allowfullscreen></iframe>
+
 
 [+0.5] Summarize 1-3 takeaways from the feedback you received in class.
 - **Enhance usability** by adding download buttons for easier access to processed files.  
