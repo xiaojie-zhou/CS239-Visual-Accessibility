@@ -64,8 +64,8 @@ User research showed that TAs often do not want to spend too much time on access
    2. Provide instant analysis of figures and generate actionable suggestions within seconds.
 
 # Formal Publication Style Design Goals: 
-We refer to the paper *Design Goals for Playful Technology to Support Physical Activity Among Wheelchair Users* published at CHI 2019.
-https://dl.acm.org/doi/10.1145/3290605.3300262 
+We refer to the paper [*Design Goals for Playful Technology to Support Physical Activity Among Wheelchair Users*](https://dl.acm.org/doi/10.1145/3290605.3300262) published at CHI 2019.
+
 
 We identified four key design goals for developing a tool that helps ensure educational materials are accessible to colorblind students. These goals are based on our research and feedback from instructors, aiming to make accessibility improvements easy, flexible, and effective.
 
