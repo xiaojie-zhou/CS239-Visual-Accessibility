@@ -41,7 +41,7 @@ Many TAs are unaware of accessibility issues related to color blindness. User re
 To offer TAs multiple adjustment options for improving figure accessibility, while allowing those who prefer manual adjustments to receive guidance tailored to their specific tools and coding environments.
 2. **Why is it important?**
 Different TAs have diverse teaching styles and technical preferences. User research showed that some TAs prefer adding patterns, while others want to change the colors. There are some needs to retain control over the final output, especially when maintaining high resolution of their figure. 
-3. **How will you design for this goal?**The tool will:
+3. **How will you design for this goal?** The tool will:
    1. Provide alternative adjustments, such as adding patterns or changing colors of the figure.
    2. Include an option where TAs can choose their coding language or design tool and receive some general instructions on how to apply accessibility improvements within that specific context.
 
@@ -63,6 +63,9 @@ User research showed that TAs often do not want to spend too much time on access
    1. Use a streamlined interface with minimal setup and a clear, guided workflow.
    2. Provide instant analysis of figures and generate actionable suggestions within seconds.
 
+# Formal Publication Style Design Goals: 
+We refer to the paper *Design Goals for Playful Technology to Support Physical Activity Among Wheelchair Users* published at CHI 2019.
+https://dl.acm.org/doi/10.1145/3290605.3300262 
 
 #### Design Goal 1: Support Knowledge Building
 
@@ -87,7 +90,3 @@ Research shows that inaccessible visuals can significantly impact students’ le
 TAs are often busy and may not have time for complicated accessibility checks (Relevant Factor: Habit). The tool should be quick, intuitive, and require minimal effort to use. It should provide clear, actionable suggestions that don’t require extensive training.  
 Reflections on usability in accessibility tools:  
 Many accessibility tools are effective but require users to have specialized knowledge. By making this tool self-explanatory and integrating it smoothly into existing workflows, we can reduce the effort required from instructors and encourage more widespread use.
-
-
-[+1] Depth: Find a model paper with a design goals section. Write up your design goals in a similar fashion. The model paper can be the same as before. ✅
-https://dl.acm.org/doi/10.1145/3290605.3300262 
