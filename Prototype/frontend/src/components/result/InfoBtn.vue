@@ -2,13 +2,13 @@
     <button 
       class="button" 
       @click="handleClick">
-      <img src="@/components/icons/info-svgrepo-com.svg" class="icon" alt="Info Icon" />
+      <img src="@/components/icons/info-black.svg" class="icon" alt="Info Icon" />
     </button>
 </template>
   
 <script setup>
     const handleClick = () => { // TODO
-    console.log("Info btn clicked")
+        console.log("Info btn clicked")
     };
 </script>
 
@@ -40,7 +40,6 @@
         width: 25px;
         height: 25px;
         filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
-        /* TODO: color not accurate */
     }
 
     .button:hover .icon {

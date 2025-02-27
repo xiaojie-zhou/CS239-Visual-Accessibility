@@ -3,7 +3,7 @@
       <div class="circle" :class="{ selected: isSelected }"></div>
       <p>{{ typeName }} Color Blindness</p>
       <a :href="hlink" target="_blank">
-        <img src="../icons/external-link-svgrepo-com.svg"/>
+        <img src="../icons/external-link.svg"/>
       </a>
     </div>
   </template>

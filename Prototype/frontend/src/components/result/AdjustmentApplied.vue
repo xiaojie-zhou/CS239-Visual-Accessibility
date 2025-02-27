@@ -1,5 +1,6 @@
 <script setup>
 import DownloadBtn from './DownloadBtn.vue'
+import SimulationBtn from './SimulationBtn.vue'
 import InfoBtn from './InfoBtn.vue'
 </script>
 
@@ -9,8 +10,9 @@ import InfoBtn from './InfoBtn.vue'
         <!-- generated diagram here -->
     </div>
     <div class="buttons">
-        <DownloadBtn />
+        <SimulationBtn />
         <InfoBtn />
+        <DownloadBtn />
     </div>
   </div>  
 </template>
@@ -31,5 +33,7 @@ import InfoBtn from './InfoBtn.vue'
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
   }
 </style>

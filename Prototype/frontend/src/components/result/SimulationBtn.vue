@@ -2,13 +2,13 @@
     <button 
       class="button" 
       @click="handleClick">
-      <img src="@/components/icons/download-black-edited.svg" class="icon" alt="Download Icon" />
+      <img src="@/components/icons/glasses-black.svg" class="icon" alt="Simulation Icon" />
     </button>
 </template>
   
 <script setup>
     const handleClick = () => { // TODO
-        console.log("Download btn clicked")
+    console.log("Simulation btn clicked")
     };
 </script>
 
@@ -37,13 +37,12 @@
     }
 
     .icon {
-        width: 20px;
-        height: 20px;
+        width: 23px;
+        height: 23px;
         filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
     }
 
     .button:hover .icon {
         filter: invert(100%) sepia(0%) saturate(0%) brightness(200%) contrast(100%);
     }
-
 </style>
