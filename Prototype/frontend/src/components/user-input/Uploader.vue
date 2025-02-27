@@ -11,9 +11,13 @@
 
     </div>
   </template>
-  
-  <script setup> 
+
+  <script setup>
   // TODO
+  import {ref} from "vue";
+  import axios from "axios";
+
+  const file = ref(null)
   const handleUpload = (event) => {
     const files = event.target.files;
     console.log("Selected files:", files);
@@ -22,8 +26,31 @@
     const files = event.dataTransfer.files;
     console.log("Dropped files:", files);
   };
+  // Upload File to Server
+  const uploadFile = async () => {
+    if (!file.value) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file.value);
+
+    try {
+      const response = await axios.post("http://localhost:5000/generate", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Upload successful:", response.data);
+      alert("File uploaded successfully!");
+      file.value = null; // Reset file after upload
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
+    }
+  };
+
   </script>
-  
+
   <style scoped>
   .upload-box {
     width: 300px;
@@ -40,23 +67,22 @@
     background-color: #f9f9f9;
     transition: background-color 0.2s ease-in-out;
   }
-  
+
   .upload-box:hover {
     background-color: #f1f1f1;
   }
-  
+
   .file-input {
     display: none;
   }
-  
+
   .upload-label {
     cursor: pointer;
   }
-  
+
   .browse-text {
     color: #3498db;
     font-weight: bold;
     text-decoration: underline;
   }
   </style>
-  
