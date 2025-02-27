@@ -37,7 +37,7 @@ def extract_colors(image_path, num_colors=5, resize_factor=0.25):
 if __name__ == "__main__":
 
     # Example: Extract colors from an image
-    image_path = "user_input/bar5.jpg"  # Update with correct path
+    image_path = "user_input/20250227130339.png"  # Update with correct path
     num_colors = 5  # Number of dominant colors to detect
 
     dominant_colors = extract_colors(image_path, num_colors)
