@@ -14,10 +14,14 @@ r2 = [2,6,10]
 r3 = [3,4,7,8,11,12]
 r4 = r1 + r2 + r3
  
-# Create barplot
-plt.bar(r1, bars1, width = barWidth, color = (0.3,0.1,0.4,0.6), label='Alone')
-plt.bar(r2, bars2, width = barWidth, color = (0.3,0.5,0.4,0.6), label='With Himself')
-plt.bar(r3, bars3, width = barWidth, color = (0.3,0.9,0.4,0.6), label='With other genotype')
+# # Create barplot
+# plt.bar(r1, bars1, width = barWidth, color = (0.3,0.1,0.4,0.6), label='Alone')
+# plt.bar(r2, bars2, width = barWidth, color = (0.3,0.5,0.4,0.6), label='With Himself')
+# plt.bar(r3, bars3, width = barWidth, color = (0.3,0.9,0.4,0.6), label='With other genotype')
+
+plt.bar(r1, bars1, width = barWidth, color = (0.55, 0, 0.0, 1), label='Alone')
+plt.bar(r2, bars2, width = barWidth, color = (0, 0.39, 0, 1), label='With Himself')
+plt.bar(r3, bars3, width = barWidth, color = (0.3,0.9,0.4, 1), label='With other genotype')
 # Note: the barplot could be created easily. See the barplot section for other examples.
  
 # Create legend
@@ -37,5 +41,5 @@ for i in range(len(r4)):
 plt.subplots_adjust(bottom= 0.2, top = 0.98)
  
 # Show graphic
-plt.savefig('barplot_threeColors.png', dpi=150)
+plt.savefig('barplot_threeColors_red_green.png', dpi=150)
 plt.show()

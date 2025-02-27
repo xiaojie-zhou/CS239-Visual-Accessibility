@@ -60,7 +60,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
         aspect_ratio = wb / float(hb)
         
         # Basic bar characteristics (adjust as needed)
-        print(area, aspect_ratio)
+        # print(area, aspect_ratio)
         if area > min_bar_area and aspect_ratio < 2:
             # Convert coordinates back to original image space
             bars.append((x + xb, y + yb, wb, hb + margin//2))
@@ -78,10 +78,10 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
         roi = img_rgb[yb:yb+hb, xb:xb+wb]
         avg_color = np.mean(roi, axis=(0, 1))
         bar_colors.append(avg_color)
-    print(bar_colors)
+    # print(bar_colors)
     kmeans = KMeans(n_clusters=num_colors, n_init=10, random_state=42)
     labels = kmeans.fit_predict(bar_colors)
-    print(labels)
+    # print(labels)
 
     # Step 4: Create hatch patterns
     patterns = [
@@ -145,16 +145,18 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
                 cv2.line(overlay, pt1, pt2, color, pattern['thickness'])
                 y_start -= step
             
-        
-        # show the current bar contour and hatch pattern
-        cv2.rectangle(overlay, (xb, yb), (xb+wb, yb+hb), (255, 0, 0), 2)
-        cv2.imshow('Bar Contour with Hatch Pattern', cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        #
+        # # show the current bar contour and hatch pattern
+        # cv2.rectangle(overlay, (xb, yb), (xb+wb, yb+hb), (255, 0, 0), 2)
+        # cv2.imshow('Bar Contour with Hatch Pattern', cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
     
     # Blend and save
     result = cv2.addWeighted(original, 1 - hatch_alpha, overlay, hatch_alpha, 0)
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
-# Usage
-add_hatches_to_bars('barplot_threeColors.png', 'output.png', num_colors=5, hatch_alpha=0.4)
+if __name__ == '__main__':
+    # Usage
+    # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/user_input/20250227125430.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
+    add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/barplot.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
