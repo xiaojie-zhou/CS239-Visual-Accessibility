@@ -37,5 +37,5 @@ for i in range(len(r4)):
 plt.subplots_adjust(bottom= 0.2, top = 0.98)
  
 # Show graphic
-plt.savefig('barplot_threeColors.png', dpi=300)
+plt.savefig('barplot_threeColors.png', dpi=150)
 plt.show()

@@ -5,6 +5,9 @@ from sklearn.cluster import KMeans
 def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     # Load image and convert color spaces
     img = cv2.imread(input_path)
+    # get the image size
+    height, width, _ = img.shape
+    print(height, width)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     original = img_rgb.copy()
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
@@ -18,8 +21,8 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     x, y, w, h = cv2.boundingRect(plot_contour)
 
     # # show the contour
-    # cv2.drawContours(img_rgb, [plot_contour], -1, (0, 255, 0), 2)
-    # cv2.imshow('Contour', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.drawContours(img_rgb, [plot_contour], -1, (255, 255, 0), 2)
+    # cv2.imshow('Largest Contour', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
     
@@ -36,7 +39,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
                                   cv2.THRESH_BINARY_INV, 11, 2)
     
     # Morphological operations to clean up
-    kernel = np.ones((3,3), np.uint8)
+    kernel = np.ones((1,1), np.uint8)
     cleaned = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
     
     # Find bar contours
@@ -48,7 +51,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
     
-    # Filter and collect bars
+    # Filter and collect bars with coordinates in the original image space
     bars = []
     min_bar_area = 100  # Adjust based on image size
     for cnt in bar_contours:
@@ -57,10 +60,18 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
         aspect_ratio = wb / float(hb)
         
         # Basic bar characteristics (adjust as needed)
-        if area > min_bar_area and aspect_ratio < 0.8:
+        print(area, aspect_ratio)
+        if area > min_bar_area and aspect_ratio < 2:
             # Convert coordinates back to original image space
-            bars.append((x + xb, y + yb, wb, hb))
+            bars.append((x + xb, y + yb, wb, hb + margin//2))
     
+    # # plot the bars
+    # for (xb, yb, wb, hb) in bars:
+    #     cv2.rectangle(img_rgb, (xb, yb), (xb+wb, yb+hb), (255, 0, 0), 1)
+    # cv2.imshow('Bars', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
     # Step 3: Extract and cluster bar colors
     bar_colors = []
     for (xb, yb, wb, hb) in bars:
@@ -88,10 +99,10 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
         color = (0, 0, 0)  # Black hatches
         if pattern['type'] == 'horizontal':
             for y_line in range(yb, yb+hb, pattern['spacing']):
-                cv2.line(overlay, (xb, y_line), (xb+wb, y_line), color, pattern['thickness'])
+                cv2.line(overlay, (xb + 1, y_line), (xb+wb, y_line), color, pattern['thickness'])
         elif pattern['type'] == 'vertical':
-            for x_line in range(xb, xb+wb, pattern['spacing']):
-                cv2.line(overlay, (x_line, yb), (x_line, yb+hb), color, pattern['thickness'])
+            for x_line in range(xb, xb+wb-1, pattern['spacing']):
+                cv2.line(overlay, (x_line, yb), (x_line, yb + hb - 1), color, pattern['thickness'])
         elif pattern['type'] == 'cross':
             for y_line in range(yb, yb+hb, pattern['spacing']):
                 cv2.line(overlay, (xb, y_line), (xb+wb, y_line), color, pattern['thickness'])
@@ -146,4 +157,4 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
 # Usage
-add_hatches_to_bars('barplot.png', 'output.png', num_colors=5, hatch_alpha=0.4)
+add_hatches_to_bars('barplot_threeColors.png', 'output.png', num_colors=5, hatch_alpha=0.4)
