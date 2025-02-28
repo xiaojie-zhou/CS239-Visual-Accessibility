@@ -1,48 +1,75 @@
 <template>
-    <button 
-      class="button" 
-      @click="handleClick">
+  <div class="button-container">
+    <button class="button" 
+      @click="toggle" 
+      :class="{ 'active': isActive }">
       <img src="@/components/icons/info-black.svg" class="icon" alt="Info Icon" />
     </button>
+    <div v-if="isActive" class="tooltip">
+        <InfoTooltip />
+    </div>
+ </div>
 </template>
   
 <script setup>
-    const handleClick = () => { // TODO
-        console.log("Info btn clicked")
-    };
+  import InfoTooltip from './InfoTooltip.vue'
+  defineProps({ isActive: Boolean });
+  const emit = defineEmits(['toggle']);
+  const toggle = () => emit('toggle');
 </script>
-
+  
 <style scoped>
-    .button {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        border: 2px solid #3498db;
-        background-color: white;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-    }
+  .button-container {
+    position: relative;
+    display: inline-block;
+  }
 
-    .button:hover {
-        background-color: #3498db;
-    }
+  .button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    border: 2px solid #3498db;
+    background-color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
 
-    .button:focus {
-        outline: none;
-    }
+  .button.active{
+    background-color: #3498db;
+  }
 
-    .icon {
-        width: 25px;
-        height: 25px;
-        filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
-    }
+  .button:focus {
+    outline: none;
+  }
 
-    .button:hover .icon {
-        filter: invert(100%) sepia(0%) saturate(0%) brightness(200%) contrast(100%);
-    }
+  .icon {
+    width: 25px;
+    height: 25px;
+    filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
+  }
+
+  .button.active .icon {
+    filter: invert(100%) sepia(0%) saturate(0%) brightness(200%) contrast(100%);
+  }
+
+  .tooltip {
+    position: absolute;
+    margin-top: 20px;
+    height: 100px;
+    width: 200px;
+    transform: translateX(-50%);
+    background-color: #3498db;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0.9;
+    transition: opacity 0.3s ease-in-out;
+  }
 </style>

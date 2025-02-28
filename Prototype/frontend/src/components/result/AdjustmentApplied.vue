@@ -1,7 +1,12 @@
 <script setup>
-import DownloadBtn from './DownloadBtn.vue'
-import SimulationBtn from './SimulationBtn.vue'
-import InfoBtn from './InfoBtn.vue'
+  import DownloadBtn from './DownloadBtn.vue'
+  import SimulationBtn from './SimulationBtn.vue'
+  import InfoBtn from './InfoBtn.vue'
+  import { ref } from 'vue';
+  const activeTooltip = ref(null);
+  const toggleTooltip = (tooltip) => {
+    activeTooltip.value = activeTooltip.value === tooltip ? null : tooltip;
+  };
 </script>
 
 <template>
@@ -10,8 +15,14 @@ import InfoBtn from './InfoBtn.vue'
         <!-- generated diagram here -->
     </div>
     <div class="buttons">
-        <SimulationBtn />
-        <InfoBtn />
+        <SimulationBtn 
+          :isActive="activeTooltip === 'simulation'" 
+          @toggle="toggleTooltip('simulation')" 
+        />
+        <InfoBtn 
+          :isActive="activeTooltip === 'info'" 
+          @toggle="toggleTooltip('info')" 
+        />
         <DownloadBtn />
     </div>
   </div>  

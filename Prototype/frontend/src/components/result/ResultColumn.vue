@@ -1,5 +1,7 @@
 <script setup>
-import NoAdjustment from './NoAdjustment.vue'
+import AdjustmentNullState from './AdjustmentNullState.vue'
+import AdjustmentLoadingState from './AdjustmentLoadingState.vue'
+import AdjustmentInapplicable from './AdjustmentInapplicable.vue'
 import AdjustmentApplied from './AdjustmentApplied.vue'
 </script>
 
