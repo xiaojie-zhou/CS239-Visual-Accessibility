@@ -22,6 +22,30 @@ app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 def hello_world():
     return "Connection Successful"
 
+
+# def receive_file():
+#     if "file" not in request.files:
+#         return jsonify({"error": "No file part"}), 400
+#
+#     file = request.files["file"]
+#
+#     if file.filename == "":
+#         return jsonify({"error": "No selected file"}), 400
+#
+#     # Extract file extension
+#     file_ext = os.path.splitext(file.filename)[1]
+#
+#     # Generate a new file name with timestamp
+#     new_filename = datetime.now().strftime("%Y%m%d%H%M%S") + file_ext
+#
+#     # Save file
+#     file_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename)
+#     file.save(file_path)
+#
+#     return file_path
+
+
+
 @app.route("/generate", methods=["POST"])
 def generate():
     """assuming uploaded in FormData"""
@@ -44,7 +68,7 @@ def generate():
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename)
     file.save(file_path)
 
-    # todo: process image
+    # process image
     output_path = os.path.join(app.config["OUTPUT_FOLDER"], new_filename)
     add_hatches_to_bars(file_path, output_path)
 
