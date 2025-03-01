@@ -5,19 +5,19 @@ import GenerateBtn from './GenerateBtn.vue'
 </script>
 
 <template>
-    <div class="left-column">
+    <div>
         <div class="uploader"><Uploader /></div>
         <div class="color-blindness-selector"><ColorBlindnessSelector /></div>
-        <div><GenerateBtn /></div>
+        <div class="generate-btn"><GenerateBtn /></div>
     </div>
 </template>
 
 
 <style scoped>
-.left-column {
-    flex: 1;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-  }
+.color-blindness-selector{
+ margin-top: 30px
+}
+.generate-btn {
+    margin-top: 30px;
+}
 </style>

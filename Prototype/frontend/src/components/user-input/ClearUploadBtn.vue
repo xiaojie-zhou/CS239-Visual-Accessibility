@@ -4,11 +4,7 @@
       @click="handleClick" 
       :disabled="isDisabled" 
       :class="{ 'disabled': isDisabled }">
-      <slot>
-        <p>
-          Evaluate & Generate
-        </p>
-      </slot>
+      <slot><p>Clear</p></slot>
     </button>
   </template>
   
@@ -22,14 +18,16 @@
     },
   });
   
-  const handleClick = () => {
-    console.log("Generate btn clicked")
+  const handleClick = () => { // TODO
+    console.log("clear btn clicked")
   };
   </script>
   
   <style scoped>
   .button {
-    padding: 20px 30px;
+    width: 150px;
+    height: 70px;
+    padding: 20px;
     font-size: 16px;
     color: white;
     background-color: #3498db;
@@ -55,8 +53,7 @@
   .button.disabled {
     opacity: 0.6;
   }
-
   p {
-    font-size: 50px;
+    font-size: 30px;
   }
   </style>

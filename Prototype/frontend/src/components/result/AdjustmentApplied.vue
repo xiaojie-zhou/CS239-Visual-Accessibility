@@ -29,13 +29,13 @@
 </template>
 
 <style scoped>
-.feedback-container {
+  .feedback-container {
     display: flex;
     flex-direction: column;
-}
+  }
  .new-diagram {
-    width: 300px;
-    height: 150px;
+    width: 700px;
+    height: 400px;
     border: 2px dashed #3498db;
     border-radius: 5px;
     background-color: #f9f9f9;

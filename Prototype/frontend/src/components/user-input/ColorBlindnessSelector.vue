@@ -2,8 +2,8 @@
 import ColorBlindnessOption from './ColorBlindnessOption.vue'
 </script>
 <template>
-    <div>
-        Choose the type of color blindness
+    <div class="title">
+        Choose the type of color blindness:
     </div>
     <div>
         <ColorBlindnessOption type="rg"/>
@@ -11,3 +11,10 @@ import ColorBlindnessOption from './ColorBlindnessOption.vue'
         <ColorBlindnessOption type="complete"/>
     </div>
 </template>
+
+<style scoped>
+.title {
+    color: black;
+    font-size: 40px;
+}
+</style>

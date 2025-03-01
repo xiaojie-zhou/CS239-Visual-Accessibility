@@ -1,6 +1,6 @@
 <template>
     <div class="header-container">
-      <h1 class="header">Color Vision Accessibility Tool</h1>
+      <h1 class="header">Color Vision Diagram Converter</h1>
       <hr class="line" />
     </div>
   </template>
@@ -14,15 +14,17 @@
   }
   
   .header {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 80px;
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
   
   .line {
-    width: 80%;
+    width: 100%;
     height: 2px;
     background-color: #ccc;
     border: none;
+    margin-bottom: 30px;
   }
   </style>
   
