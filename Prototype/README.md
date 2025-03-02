@@ -1,25 +1,26 @@
-# Installation
+# Get Started
+### Open two terminals for frontend and backend
 for macOS/linux
 
 process for windows should be similar 
 ## Backend
-Assuming python is already installed
+Assuming python 3.12 is already installed
 
 Use virtual environment if you want to
-
-cd into the backend folder
-
-install requirements.txt
-
+### Installation
 ```
 cd backend
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 ```
+### Running
+```
+flask --app app run
+```
 
 ## Frontend
-Assuming Node.js is installed
+Assuming [Node.js](https://nodejs.org/en) is installed
 
 cd into the frontend folder
 
@@ -32,22 +33,7 @@ python3.12 -m venv .venv
 npm install
 ```
 
-# Start Using
-Start two terminals 
-
-## Backend
-
+## Running
 ```
-cd backend
-# . .venv/bin/activate
-flask --app app run
-```
-
-## Frontend
-
-```
-cd frontend
-# . .venv/bin/activate
 npm run dev
 ```
-
