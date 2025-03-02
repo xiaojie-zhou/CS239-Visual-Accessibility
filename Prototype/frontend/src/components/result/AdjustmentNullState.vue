@@ -1,7 +1,7 @@
 <!-- TODO -->
 <template>
     <div class="container">
-        <img src="@/components/icons/diagram-bar.svg"/>
+        <img src="@/components/icons/diagram-bar-edited.svg"/>
         <div class="text">
             Upload your image and choose color blindness type to generate your accessible diagram!
         </div>
