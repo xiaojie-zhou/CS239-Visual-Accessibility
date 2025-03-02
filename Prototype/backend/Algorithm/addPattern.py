@@ -156,7 +156,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     result = cv2.addWeighted(original, 1 - hatch_alpha, overlay, hatch_alpha, 0)
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
-if __name__ == '__main__':
-    # Usage
-    # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/user_input/20250227125430.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
-    add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/barplot.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
+# if __name__ == '__main__':
+#     # Usage
+#     add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/user_input/20250227125430.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
+#     add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/barplot.png', '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/output2.png', num_colors=5, hatch_alpha=0.4)
