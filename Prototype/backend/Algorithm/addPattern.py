@@ -3,8 +3,20 @@ import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import euclidean
+import os
 
-def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
+def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color=True):
+    """
+    Adjust colors and add hatch patterns to bars in a bar plot image.
+    :param input_path: Path to the input image
+    :param output_folder: Path to the output folder
+    :param hatch_alpha: Alpha value for blending the hatches with the original image
+    :param change_color: If True, the bars will be colored with a predefined color palette
+
+    Results:
+    - hatched_bars.png: The image with hatched patterns on the bars
+    - color_adjusted.png: The original image with color adjustments (only when change_color=True)
+    """
     # Load image and convert color spaces
     img = cv2.imread(input_path)
     # get the image size
@@ -26,12 +38,6 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     margin = 10  # Add some margin
     x, y, w, h = x + margin, y + margin, w - 2*margin, h - 2*margin
     plot_area = gray[y:y+h, x:x+w]
-
-    # # show the contour
-    # cv2.drawContours(img_rgb, [plot_contour], -1, (255, 255, 0), 2)
-    # cv2.imshow('Largest Contour', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     
     # Step 2: Detect bars within plot area
     # Adaptive thresholding for better bar detection
@@ -46,12 +52,6 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # # show the bar contours
-    # cv2.drawContours(plot_area_rgb, bar_contours, -1, (0, 255, 0), 2)
-    # cv2.imshow('Bar Contours', cv2.cvtColor(plot_area_rgb, cv2.COLOR_RGB2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    
     # Filter and collect bars with coordinates in the original image space
     bars = []
     legends = []
@@ -74,22 +74,8 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
         s_variance = np.var(hsv_roi[:, :, 1])
         v_variance = np.var(hsv_roi[:, :, 2])
         if h_variance < 100 and s_variance < 100 and v_variance < 100:
-            bars.append((xb, yb, wb, hb + margin//2))
+            bars.append((xb, yb, wb, hb + margin - 3))
     
-    # # plot the bars
-    # for (xb, yb, wb, hb) in bars:
-    #     cv2.rectangle(img_rgb, (xb, yb), (xb+wb, yb+hb), (255, 0, 0), 1)
-    # cv2.imshow('Bars', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
-    # # plot the legends
-    # for (xb, yb, wb, hb) in legends:
-    #     cv2.rectangle(img_rgb, (xb, yb), (xb+wb, yb+hb), (255, 0, 0), 1)
-    # cv2.imshow('Legends', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
     x_legend, y_legend, w_legend, h_legend = legends[0]
     margin_legend = 5
     x_legend, y_legend, w_legend, h_legend = x_legend + margin_legend, y_legend + margin_legend, w_legend - 2*margin_legend, h_legend - 2*margin_legend
@@ -107,15 +93,10 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     # Find bar contours
     legend_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # # show all the legend contours on legend area
-    # cv2.drawContours(legend_area, legend_contours, -1, (0, 255, 0), 2)
-    # cv2.imshow('Legend Contours', legend_area)
-    # cv2.waitKey(0)
-
     # Filter and collect bars with coordinates in the original image space
     legend_bars = []
     min_bar_area = 5 # Adjust based on image size
-    small_bar_margin = 2
+    small_bar_margin = 0
     for cnt in legend_contours:
         area = cv2.contourArea(cnt)
         if area < min_bar_area:
@@ -182,6 +163,9 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
+    acadia_color_palettes = ['#FED789FF', '#023743FF', '#72874EFF', '#476F84FF', '#A4BED5FF', '#453947FF']
+
+
     # Step 4: Create hatch patterns
     patterns = [
         {'type': 'horizontal', 'spacing': 8, 'thickness': 2},
@@ -192,33 +176,47 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
     ]
     
     # Create overlay
-    overlay = original.copy()
+    color_overlay = original.copy()
+    hatch_overlay = np.zeros_like(original, dtype=np.uint8) # for hatches
+    for i, (group, bar_list) in enumerate(group_bars.items()):
+        if change_color:
+            bar_color = acadia_color_palettes[i % len(acadia_color_palettes)]
+            bar_color = tuple(int(bar_color[i:i+2], 16) for i in (1, 3, 5))
+            for (xb, yb, wb, hb) in bar_list:
+                cv2.rectangle(color_overlay, (xb, yb), (xb+wb, yb+hb), bar_color, -1)
+    # Save the result with color adjustments
+    result = color_overlay.copy()
+    output_path = os.path.join(output_folder, 'color_adjusted.png')
+    cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
+
+    if change_color:
+        hatch_overlay = color_overlay.copy()
+    else:
+        hatch_overlay = original.copy()
     for i, (group, bar_list) in enumerate(group_bars.items()):
         pattern = patterns[i % len(patterns)]
         bar_color = color_map[group]
         # get the luminance of the color and if it is less than 128, use white hatches
         luminance = 0.299 * bar_color[0] + 0.587 * bar_color[1] + 0.114 * bar_color[2]
         print(luminance)
-        if luminance < 128:
-            color = (255, 255, 255) # White hatches
-        else:
-            color = (0, 0, 0)  # Black hatches
+        color = (255, 255, 255) if luminance < 128 else (0, 0, 0)  # White if dark, black if bright
+
         for (xb, yb, wb, hb) in bar_list:
             if pattern['type'] == 'horizontal':
                 for y_line in range(yb, yb+hb+1, pattern['spacing']):
-                    cv2.line(overlay, (xb + 1, y_line), (xb+wb-1, y_line), color, pattern['thickness'])
+                    cv2.line(hatch_overlay, (xb + 1, y_line), (xb+wb-1, y_line), color, pattern['thickness'])
             elif pattern['type'] == 'vertical':
                 for x_line in range(xb, xb+wb+1, pattern['spacing']):
-                    cv2.line(overlay, (x_line, yb+1), (x_line, yb+hb), color, pattern['thickness'])
+                    cv2.line(hatch_overlay, (x_line, yb+1), (x_line, yb+hb), color, pattern['thickness'])
             elif pattern['type'] == 'cross':
                 for y_line in range(yb, yb+hb, pattern['spacing']):
-                    cv2.line(overlay, (xb, y_line), (xb+wb, y_line), color, pattern['thickness'])
+                    cv2.line(hatch_overlay, (xb, y_line), (xb+wb, y_line), color, pattern['thickness'])
                 for x_line in range(xb, xb+wb, pattern['spacing']):
-                    cv2.line(overlay, (x_line, yb), (x_line, yb+hb), color, pattern['thickness'])
+                    cv2.line(hatch_overlay, (x_line, yb), (x_line, yb+hb), color, pattern['thickness'])
             elif pattern['type'] == 'dots':
                 for y_dot in range(yb, yb+hb, pattern['spacing']):
                     for x_dot in range(xb, xb+wb, pattern['spacing']):
-                        cv2.circle(overlay, (x_dot, y_dot), pattern['radius'], color, -1)
+                        cv2.circle(hatch_overlay, (x_dot, y_dot), pattern['radius'], color, -1)
             elif pattern['type'] == 'diagonal':
                 step = pattern['spacing']
                 k = pattern['slope']
@@ -235,7 +233,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
                         pt2 = (int(pt2_x), yb)
                     else:
                         pt2 = (xb + wb, int(pt2_y))
-                    cv2.line(overlay, pt1, pt2, color, pattern['thickness'])
+                    cv2.line(hatch_overlay, pt1, pt2, color, pattern['thickness'])
                     x_start -= step
 
                 y_start = yb + hb
@@ -249,7 +247,7 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
                         pt2 = (int(pt2_x), yb)
                     else:
                         pt2 = (xb + wb, int(pt_2_y))
-                    cv2.line(overlay, pt1, pt2, color, pattern['thickness'])
+                    cv2.line(hatch_overlay, pt1, pt2, color, pattern['thickness'])
                     y_start -= step
                 
             #
@@ -260,9 +258,11 @@ def add_hatches_to_bars(input_path, output_path, num_colors=3, hatch_alpha=0.3):
             # cv2.destroyAllWindows()
     
     # Blend and save
-    result = cv2.addWeighted(original, 1 - hatch_alpha, overlay, hatch_alpha, 0)
+    result = cv2.addWeighted(hatch_overlay, 1 - hatch_alpha, hatch_overlay, hatch_alpha, 0)
+    output_path = os.path.join(output_folder, 'hatched_bars.png')
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
 if __name__ == '__main__':
     # Usage
-    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_threeColors_red_green.png', './Prototype/backend/Algorithm/acessibile_barplot.png', num_colors=5, hatch_alpha=0.4)
+    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_threeColors_red_green.png', 
+                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True)
