@@ -7,10 +7,16 @@ import AdjustmentApplied from './AdjustmentApplied.vue'
 
 <template>
     <div class="right-column">
-      <!-- TODO -->
-      <AdjustmentApplied />
+      <!-- TODO: display one of the four states -->
+      <AdjustmentNullState />
+      <!-- <AdjustmentLoadingState /> -->
+      <!-- <AdjustmentApplied /> -->
+      <!-- <AdjustmentInapplicable /> -->
     </div>
 </template>
 
 <style scoped>
+.right-column {
+  width: 700px;
+}
 </style>

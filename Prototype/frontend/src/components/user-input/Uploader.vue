@@ -35,7 +35,7 @@ const handleDrop = async (event) => {
   console.log("Dropped file:", file.value);
   if (file.value) await uploadFile(); // Auto-upload
 };
-
+ 
 // Upload File to Server // TODO: need to link to backend
 const uploadFile = async () => {
   if (!file.value) return;

@@ -25,10 +25,10 @@
   }
 
   .button {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
     font-size: 16px;
-    border: 2px solid #3498db;
+    border: 4px solid #3498db;
     background-color: white;
     border-radius: 50%;
     cursor: pointer;
@@ -48,8 +48,8 @@
   }
 
   .icon {
-    width: 25px;
-    height: 25px;
+    width: 50px;
+    height: 50px;
     filter: invert(29%) sepia(78%) saturate(925%) hue-rotate(180deg) brightness(96%) contrast(90%);
   }
 
