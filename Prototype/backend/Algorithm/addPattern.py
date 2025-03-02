@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import euclidean
 import os
@@ -51,6 +50,11 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # # DRAW ALL contours
+    # cv2.drawContours(img_rgb, bar_contours, -1, (0, 255, 0), 2)
+    # cv2.imshow('All Contours', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     # Filter and collect bars with coordinates in the original image space
     bars = []
@@ -264,5 +268,5 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 
 if __name__ == '__main__':
     # Usage
-    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_threeColors_red_green.png', 
+    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
                         './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True)
