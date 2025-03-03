@@ -4,6 +4,7 @@ from PIL import Image
 import os
 from datetime import datetime
 from Algorithm.addPattern import add_hatches_to_bars
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -19,36 +20,18 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)  # Ensure the folder exists
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 
+# Store the uploaded file paths in memory
+# {token: file_path}
+file_store = {}
+
 @app.route("/")
 def hello_world():
-    return "Connection Successful"
+    return "Backend Online", 200
 
 
-# def receive_file():
-#     if "file" not in request.files:
-#         return jsonify({"error": "No file part"}), 400
-#
-#     file = request.files["file"]
-#
-#     if file.filename == "":
-#         return jsonify({"error": "No selected file"}), 400
-#
-#     # Extract file extension
-#     file_ext = os.path.splitext(file.filename)[1]
-#
-#     # Generate a new file name with timestamp
-#     new_filename = datetime.now().strftime("%Y%m%d%H%M%S") + file_ext
-#
-#     # Save file
-#     file_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename)
-#     file.save(file_path)
-#
-#     return file_path
-
-
-@app.route("/addpattern/", methods=["POST"])
-@app.route("/addpattern/<color>", methods=["POST"])
-def add_pattern(color=None):
+@app.route("/upload", methods=["POST"])
+@app.route("/upload/<color>", methods=["POST"])
+def generate(color=None):
     """assuming uploaded in FormData"""
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -77,14 +60,17 @@ def add_pattern(color=None):
     if file_ext != ".png":
         file_path = convert_to_png(file_path)
 
-    # process image
+    # process image and save
     output_path = os.path.join(app.config["OUTPUT_FOLDER"], new_filename)
     if color is None:
         add_hatches_to_bars(file_path, output_path)
 
-    # send file back, need path to the processed pic
     if os.path.exists(output_path):
-        return send_file(output_path)
+        token = uuid.uuid4().hex
+        file_store[token] = output_path
+
+        return jsonify({"image": token}), 200
+
 
 
 def is_valid_image(file_path):
@@ -102,4 +88,12 @@ def convert_to_png(image_path):
     with Image.open(image_path) as img:
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
+
+
+@app.route("/getImg/<token>", methods=["GET"])
+def get_image(token):
+    if token not in file_store:
+        return jsonify({"error": "Invalid token"}), 400
+    else:
+        return jsonify(file_store[token]), 200
 
