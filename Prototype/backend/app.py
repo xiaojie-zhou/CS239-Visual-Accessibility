@@ -45,10 +45,10 @@ def upload():
     file_ext = os.path.splitext(file.filename)[1]
 
     # Generate a new file name with timestamp
-    new_filename = datetime.now().strftime("%Y%m%d%H%M%S") + file_ext
+    new_filename = datetime.now().strftime("%Y%m%d%H%M%S")
 
     # Save file
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename)
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename+file_ext)
     file.save(file_path)
 
     # Validate the image
@@ -84,22 +84,21 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
+@app.route("/getImg/<token>", methods=["GET"])
 @app.route("/getImg/<token>/<color>", methods=["GET"])
 def get_image(token, color=None):
     # process image and save
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
 
-    output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token])
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token])
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
 
     # TODO: Add color processing
     if color is None:
-        add_hatches_to_bars(file_path, output_path)
-
+        add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"])
+        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")
     if os.path.exists(output_path):
-        return jsonify(send_file(output_path)), 200
+        return send_file(output_path), 200
     else:
+        print(output_path)
         return jsonify({"error": "Image not generated."}), 500
-
-
