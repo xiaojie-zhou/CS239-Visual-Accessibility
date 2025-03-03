@@ -30,7 +30,8 @@ def hello_world():
 
 
 @app.route("/upload", methods=["POST"])
-def upload(color=None):
+def upload():
+# def upload(color=None):
     """assuming uploaded in FormData"""
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -60,15 +61,22 @@ def upload(color=None):
         file_path = convert_to_png(file_path)
 
     # process image and save
-    output_path = os.path.join(app.config["OUTPUT_FOLDER"], new_filename)
-    if color is None:
-        add_hatches_to_bars(file_path, output_path)
+    # output_path = os.path.join(app.config["OUTPUT_FOLDER"], new_filename)
+    # if color is None:
+    #     add_hatches_to_bars(file_path, output_path)
 
-    if os.path.exists(output_path):
+    # if os.path.exists(output_path):
+    #     token = uuid.uuid4().hex
+    #     file_store[token] = output_path
+    #     return jsonify({"image": token}), 200
+
+    if os.path.exists(file_path):
         token = uuid.uuid4().hex
-        file_store[token] = output_path
-
+        file_store[token] = file_path
         return jsonify({"image": token}), 200
+    else:
+        return jsonify({"error": "Upload os path nonexist."}), 404
+
 
 
 def is_valid_image(file_path):
