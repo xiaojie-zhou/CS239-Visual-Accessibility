@@ -84,19 +84,20 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
-@app.route("/getImg/<token>", methods=["GET"])
-@app.route("/getImg/<token>/<color>", methods=["GET"])
-def get_image(token, color=None):
-    # process image and save
+@app.route("/getImg", methods=["GET"])
+def get_image():
+    token = request.args.get("token")
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
 
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
 
     # TODO: Add color processing
+    color = request.args.get("color")
     if color is None:
         add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"])
         output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")
+
     if os.path.exists(output_path):
         return send_file(output_path), 200
     else:
