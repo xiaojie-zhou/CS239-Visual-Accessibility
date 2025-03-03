@@ -30,8 +30,7 @@ def hello_world():
 
 
 @app.route("/upload", methods=["POST"])
-@app.route("/upload/<color>", methods=["POST"])
-def generate(color=None):
+def upload(color=None):
     """assuming uploaded in FormData"""
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
@@ -72,7 +71,6 @@ def generate(color=None):
         return jsonify({"image": token}), 200
 
 
-
 def is_valid_image(file_path):
     """Check if the file is a real image"""
     try:
@@ -90,8 +88,8 @@ def convert_to_png(image_path):
     return new_path
 
 
-@app.route("/getImg/<token>", methods=["GET"])
-def get_image(token):
+@app.route("/getImg/<token>/<color>", methods=["GET"])
+def get_image(token, color=None):
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     else:
