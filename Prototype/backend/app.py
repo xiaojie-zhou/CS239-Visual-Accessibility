@@ -21,7 +21,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 
 # Store the uploaded file paths in memory
-# {token: file_path}
+# {token: file_name}
 file_store = {}
 
 @app.route("/")
@@ -60,23 +60,12 @@ def upload():
     if file_ext != ".png":
         file_path = convert_to_png(file_path)
 
-    # process image and save
-    # output_path = os.path.join(app.config["OUTPUT_FOLDER"], new_filename)
-    # if color is None:
-    #     add_hatches_to_bars(file_path, output_path)
-
-    # if os.path.exists(output_path):
-    #     token = uuid.uuid4().hex
-    #     file_store[token] = output_path
-    #     return jsonify({"image": token}), 200
-
     if os.path.exists(file_path):
         token = uuid.uuid4().hex
-        file_store[token] = file_path
+        file_store[token] = new_filename
         return jsonify({"image": token}), 200
     else:
-        return jsonify({"error": "Upload os path nonexist."}), 404
-
+        return jsonify({"error": "Upload os path non-exist."}), 500
 
 
 def is_valid_image(file_path):
@@ -95,11 +84,22 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
-
 @app.route("/getImg/<token>/<color>", methods=["GET"])
 def get_image(token, color=None):
+    # process image and save
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
+
+    output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token])
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token])
+
+    # TODO: Add color processing
+    if color is None:
+        add_hatches_to_bars(file_path, output_path)
+
+    if os.path.exists(output_path):
+        return jsonify(send_file(output_path)), 200
     else:
-        return jsonify(file_store[token]), 200
+        return jsonify({"error": "Image not generated."}), 500
+
 
