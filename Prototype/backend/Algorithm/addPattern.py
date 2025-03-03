@@ -17,6 +17,11 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     - color_adjusted.png: The original image with color adjustments (only when change_color=True)
     """
     # Load image and convert color spaces
+
+    # Get the filename w/o extension
+    file_name_with_ext = os.path.basename(input_path)
+    file_name_without_ext = os.path.splitext(file_name_with_ext)[0]
+
     img = cv2.imread(input_path)
     # get the image size
     height, width, _ = img.shape
@@ -190,7 +195,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
                 cv2.rectangle(color_overlay, (xb, yb), (xb+wb, yb+hb), bar_color, -1)
     # Save the result with color adjustments
     result = color_overlay.copy()
-    output_path = os.path.join(output_folder, 'color_adjusted.png')
+    output_path = os.path.join(output_folder, file_name_without_ext+'_color_adjusted.png')
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
     if change_color:
@@ -263,7 +268,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     
     # Blend and save
     result = cv2.addWeighted(hatch_overlay, 1 - hatch_alpha, hatch_overlay, hatch_alpha, 0)
-    output_path = os.path.join(output_folder, 'hatched_bars.png')
+    output_path = os.path.join(output_folder, file_name_without_ext+'_hatched_bars.png')
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
 if __name__ == '__main__':
