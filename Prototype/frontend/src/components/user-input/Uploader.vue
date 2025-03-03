@@ -11,6 +11,8 @@
     <div class="clear-btn-container">
       <ClearUploadBtn />
     </div>
+
+    <!-- <img v-if="processedImage" :src="processedImage" alt="Uploaded Image" /> TODO -->
   </div>
 </template>
 
@@ -20,23 +22,21 @@ import axios from "axios";
 import ClearUploadBtn from "./ClearUploadBtn.vue";
 
 const file = ref(null);
+const processedImage = ref(null);
 
-// Handle file selection and auto-upload
 const handleUpload = async (event) => {
-  file.value = event.target.files[0]; // Store selected file
+  file.value = event.target.files[0]; 
   console.log("Selected file:", file.value);
-  if (file.value) await uploadFile(); // Auto-upload
+  if (file.value) await uploadFile();
 };
 
-// Handle file drop and auto-upload
 const handleDrop = async (event) => {
   event.preventDefault();
-  file.value = event.dataTransfer.files[0]; // Store dropped file
+  file.value = event.dataTransfer.files[0]; 
   console.log("Dropped file:", file.value);
-  if (file.value) await uploadFile(); // Auto-upload
+  if (file.value) await uploadFile(); 
 };
  
-// Upload File to Server // TODO: need to link to backend
 const uploadFile = async () => {
   if (!file.value) return;
 
@@ -47,12 +47,21 @@ const uploadFile = async () => {
     const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log("Upload successful:", response.data);
+    if (!response.data.image) {
+      alert("Upload failed. No token received.");
+      return;
+    }
     alert("File uploaded successfully!");
-    file.value = null; // Reset file after upload
+
+    const imageToken = response.data.image;
+    const imageResponse = await axios.get(`http://127.0.0.1:5000/getImg/${imageToken}`, {
+      responseType: "blob",
+    });
+    processedImage.value = URL.createObjectURL(imageResponse.data);
+    alert("File rendered successfully!");
   } catch (error) {
-    console.error("Upload failed:", error);
-    alert("Upload failed. Please try again.");
+    console.error("Upload error:", error);
+    alert("Error.");
   }
 };
 </script>
