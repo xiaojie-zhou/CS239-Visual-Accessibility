@@ -9,16 +9,16 @@
   </template>
   
   <script setup>
-  import { ref, computed } from 'vue';
+  import { computed } from 'vue';
   
   const props = defineProps({
     type: String,
+    selectedType: String,
   });
-  
-  const isSelected = ref(false); // Track the selected state
-  
-  const toggleSelect = () => {
-    isSelected.value = !isSelected.value; 
+  const isSelected = computed(() => props.selectedType === props.type);
+  const emit = defineEmits(["select"]);
+  const toggleSelect = () => { // notify parent when clicked
+    emit("select", props.type); 
   };
   
   const typeName = computed(() => {
