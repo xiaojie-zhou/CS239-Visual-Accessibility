@@ -99,10 +99,16 @@ def clear():
 @app.route("/getImg", methods=["GET"])
 def get_image():
     token = request.args.get("token")
-    color = request.args.get("color")
+    # ['normal', 'prot', 'deut', 'trit', 'gray']
+
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+
+    color = request.args.get("color")
+    # ['normal', 'prot', 'deut', 'trit', 'gray']
+    if color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
+        return jsonify({"error": "Invalid color"}), 400
 
     if color is None: #retrieve the original copy for uploader rendering
         if not os.path.exists(file_path):
