@@ -84,22 +84,27 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
-@app.route("/getImg", methods=["GET"])
-def get_image():
-    token = request.args.get("token")
+@app.route("/getImg/<token>", methods=["GET"])
+@app.route("/getImg/<token>/<color>", methods=["GET"])
+def get_image(token, color=None):
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
-
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    # file_path = file_store[token]
 
-    # TODO: Add color processing
-    color = request.args.get("color")
-    if color is None:
-        add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"])
-        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")
+    if color is None: #retrieve the original copy for uploader rendering
+        if not os.path.exists(file_path):
+            return jsonify({"error": "File not found"}), 404
+        return send_file(file_path, mimetype="image/png")
+    else: # TODO: retrieve the processed image
+        return jsonify({"error": "TODO"}), 400
 
-    if os.path.exists(output_path):
-        return send_file(output_path), 200
-    else:
-        print(output_path)
-        return jsonify({"error": "Image not generated."}), 500
+    # if color is None:
+    #     add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"])
+    #     output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")
+
+    # if os.path.exists(output_path):
+    #     return send_file(output_path), 200
+    # else:
+    #     print(output_path)
+    #     return jsonify({"error": "Image not generated."}), 500

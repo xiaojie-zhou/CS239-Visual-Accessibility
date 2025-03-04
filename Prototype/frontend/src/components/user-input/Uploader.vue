@@ -12,7 +12,8 @@
       <ClearUploadBtn />
     </div>
 
-    <!-- <img v-if="processedImage" :src="processedImage" alt="Uploaded Image" /> TODO -->
+    <!-- TODO -->
+    <img v-if="processedImage" :src="processedImage" alt="Uploaded Image" /> 
   </div>
 </template>
 
