@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "d584ccf0-2312-4045-b186-126c0fac7b57",
+		"name": "Visual Accessibility",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25708992"
+	},
+	"item": [
+		{
+			"name": "upload",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/upload",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getImg",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Removed the existing test script as it is not relevant to the response content",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response content type is image/png\", function () {",
+							"  pm.expect(pm.response.headers.get('Content-Type')).to.equal('image/png');",
+							"});",
+							"",
+							"pm.test(\"Response body is not null\", function () {",
+							"  pm.expect(pm.response.text()).to.not.equal('null');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/user_input/20250301154326.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/getImg?token=f8b4d5f3c9974d6681d7890bd2e99af9&color=deut&hatch=False",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"getImg"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "f8b4d5f3c9974d6681d7890bd2e99af9"
+						},
+						{
+							"key": "color",
+							"value": "deut"
+						},
+						{
+							"key": "hatch",
+							"value": "False"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simulate",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/simulate?token=f8b4d5f3c9974d6681d7890bd2e99af9&color=prot",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"simulate"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "f8b4d5f3c9974d6681d7890bd2e99af9"
+						},
+						{
+							"key": "color",
+							"value": "prot"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "clear",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var template = `",
+							"<style type=\"text/css\">",
+							"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"    .tftable tr {background-color:#ffffff;}",
+							"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"    .tftable tr:hover {background-color:#e0ffff;}",
+							"</style>",
+							"",
+							"<table class=\"tftable\" border=\"1\">",
+							"    <tr>",
+							"        <th>Message</th>",
+							"    </tr>",
+							"    <tr>",
+							"        <td>{{response.message}}</td>",
+							"    </tr>",
+							"</table>",
+							"`;",
+							"",
+							"function constructVisualizerPayload() {",
+							"    return {response: pm.response.json()}",
+							"}",
+							"",
+							"pm.visualizer.set(template, constructVisualizerPayload());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/clear",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"clear"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

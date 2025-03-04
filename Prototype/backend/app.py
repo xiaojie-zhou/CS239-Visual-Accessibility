@@ -111,26 +111,25 @@ def get_image():
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
 
     color = request.args.get("color")
-    # ['normal', 'prot', 'deut', 'trit', 'gray']
-    if color is not None and color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
+    # ['default', 'prot', 'deut', 'trit', 'gray']
+    if color is None:
+        color = "normal"
+    if color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
         return jsonify({"error": "Invalid color"}), 400
 
-    if color is None: #retrieve the original copy for uploader rendering
-        if not os.path.exists(file_path):
-            return jsonify({"error": "File not found"}), 404
-        return send_file(file_path, mimetype="image/png"), 200
-    else: # TODO: retrieve the processed image
-        return jsonify({"error": "TODO"}), 400
+    add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"], color_palette=color)
 
-    # if color is None:
-    #     add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"])
-    #     output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")
+    hatch = request.args.get("hatch")
+    if hatch == "False":
+        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token] + "_color_adjusted.png")
+    else:
+        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token] + "_hatched_bars.png")
 
-    # if os.path.exists(output_path):
-    #     return send_file(output_path), 200
-    # else:
-    #     print(output_path)
-    #     return jsonify({"error": "Image not generated."}), 500
+    if os.path.exists(output_path):
+        return send_file(output_path), 200
+    else:
+        print(output_path)
+        return jsonify({"error": "Image not generated."}), 500
 
 @app.route("/simulate", methods=["GET"])
 def simulate():

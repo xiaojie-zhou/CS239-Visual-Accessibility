@@ -4,7 +4,7 @@ from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import euclidean
 import os
 
-def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color=True, color_palette='normal_vision'):
+def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color=True, color_palette='normal'):
     """
     Adjust colors and add hatch patterns to bars in a bar plot image.
     :param input_path: Path to the input image
@@ -285,5 +285,5 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 
 if __name__ == '__main__':
     # Usage
-    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
-                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal_vision')
+    add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
+                        '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
