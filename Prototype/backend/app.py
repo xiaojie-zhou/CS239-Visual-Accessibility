@@ -91,7 +91,6 @@ def get_image():
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
-    # file_path = file_store[token]
 
     if color is None: #retrieve the original copy for uploader rendering
         if not os.path.exists(file_path):

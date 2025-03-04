@@ -1,22 +1,12 @@
 <template>
     <button 
       class="button" 
-      @click="handleClick" 
-      :disabled="isDisabled" 
-      :class="{ 'disabled': isDisabled }">
+      @click="handleClick" >
       <slot><p>Clear</p></slot>
     </button>
   </template>
   
   <script setup>
-  import { defineProps } from 'vue';
-  
-  const props = defineProps({
-    isDisabled: {
-      type: Boolean,
-      default: false, // TODO
-    },
-  });
   
   const handleClick = () => { // TODO
     console.log("clear btn clicked")
@@ -45,14 +35,6 @@
     outline: none;
   }
   
-  .button:disabled {
-    background-color: #ccc; /* Gray background when disabled */
-    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
-  }
-  
-  .button.disabled {
-    opacity: 0.6;
-  }
   p {
     font-size: 30px;
   }
