@@ -109,7 +109,7 @@ def get_image():
 
     color = request.args.get("color")
     # ['normal', 'prot', 'deut', 'trit', 'gray']
-    if color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
+    if color is not None and color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
         return jsonify({"error": "Invalid color"}), 400
 
     if color is None: #retrieve the original copy for uploader rendering
@@ -129,7 +129,7 @@ def get_image():
     #     print(output_path)
     #     return jsonify({"error": "Image not generated."}), 500
 
-@app.route("/simulate", methods=["POST"])
+@app.route("/simulate", methods=["GET"])
 def simulate():
     # require: ?token= & color=
     # color: ['prot', 'deut', 'trit']
