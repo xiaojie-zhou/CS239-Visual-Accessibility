@@ -84,6 +84,18 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
+@app.route("/clear", methods=["POST"])
+def clear():
+    # Clear the uploaded folder
+    for file in os.listdir(app.config["UPLOAD_FOLDER"]):
+        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
+    # Clear the output folder
+    for file in os.listdir(app.config["OUTPUT_FOLDER"]):
+        os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
+
+    file_store.clear()
+    return jsonify({"message": "All files cleared."}), 200
+
 @app.route("/getImg", methods=["GET"])
 def get_image():
     token = request.args.get("token")
