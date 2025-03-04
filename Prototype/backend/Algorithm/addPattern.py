@@ -11,7 +11,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     :param output_folder: Path to the output folder
     :param hatch_alpha: Alpha value for blending the hatches with the original image
     :param change_color: If True, the bars will be colored with a predefined color palette
-    :param color_palette: choose from ['normal_vision', 'Prot', 'Deut', 'Trit', 'gray']
+    :param color_palette: choose from ['normal', 'prot', 'deut', 'trit', 'gray']
 
     Results:
     - hatched_bars.png: The image with hatched patterns on the bars
@@ -57,8 +57,9 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # # DRAW ALL contours
-    # cv2.drawContours(img_rgb, bar_contours, -1, (0, 255, 0), 2)
-    # cv2.imshow('All Contours', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
+    # cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    # cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
@@ -84,7 +85,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         s_variance = np.var(hsv_roi[:, :, 1])
         v_variance = np.var(hsv_roi[:, :, 2])
         if h_variance < 100 and s_variance < 100 and v_variance < 100:
-            bars.append((xb, yb, wb, hb + margin - 3))
+            bars.append((xb, yb, wb, hb + 7))
     
     x_legend, y_legend, w_legend, h_legend = legends[0]
     margin_legend = 5
@@ -128,6 +129,8 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # for (xb, yb, wb, hb) in bars:
     #     cv2.rectangle(img_rgb, (xb, yb), (xb + wb, yb + hb), (0, 0, 255), 2)
     # cv2.imshow('All Bars', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # # save the image
+    # cv2.imwrite('bars.png', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
@@ -135,12 +138,12 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # Step 3: Extract and cluster bar colors
     bar_colors = []
     for (xb, yb, wb, hb) in bars:
-        roi = img_rgb[yb:yb+hb, xb:xb+wb]
+        roi = original[yb:yb+hb, xb:xb+wb]
         roi_hsv = cv2.cvtColor(roi, cv2.COLOR_RGB2HSV)
         avg_color = np.mean(roi_hsv.reshape(-1, 3), axis=0)
         bar_colors.append(avg_color)
-    print(bar_colors)
     bar_colors = np.array(bar_colors)
+    print(bar_colors)
 
     dbscan = DBSCAN(eps=10, min_samples=2, metric=lambda a, b: euclidean(a, b))
     labels = dbscan.fit_predict(bar_colors)
@@ -175,10 +178,10 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     
     # reference: https://davidmathlogic.com/colorblind
     acadia_color_palettes = {
-    'normal_vision': ['#FED789', '#023743', '#72874E', '#476F84', '#A4BED5', '#453947'],
-    'Prot': ['#332288', '#117733', '#44AA99', '#88CCEE', '#DDCC77', '#CC6677', '#AA4499', '#882255', '#661100'],
-    'Deut': ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000'],
-    'Trit': ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7'],
+    'normal': ['#FED789', '#023743', '#72874E', '#476F84', '#A4BED5', '#453947'],
+    'prot': ['#332288', '#117733', '#44AA99', '#88CCEE', '#DDCC77', '#CC6677', '#AA4499', '#882255', '#661100'],
+    'deut': ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000'],
+    'trit': ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7'],
     'gray': ['#000000', '#666666', '#999999', '#CCCCCC', '#DDDDDD', '#EEEEEE']
     }
     acadia_color_palette = acadia_color_palettes[color_palette]
