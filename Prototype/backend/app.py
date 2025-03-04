@@ -96,6 +96,9 @@ def clear():
     # Clear the output folder
     for file in os.listdir(app.config["OUTPUT_FOLDER"]):
         os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
+    # Clear the simulated folder
+    for file in os.listdir(app.config["SIMULATED_FOLDER"]):
+        os.remove(os.path.join(app.config["SIMULATED_FOLDER"], file))
 
     file_store.clear()
     return jsonify({"message": "All files cleared."}), 200
