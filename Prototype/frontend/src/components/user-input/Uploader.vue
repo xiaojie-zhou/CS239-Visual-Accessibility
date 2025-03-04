@@ -10,9 +10,9 @@
     </div>
   </div>
   <div v-else class="upload-box">
-    <img :src="uploadedImage" alt="Uploaded Image" /> 
+    <img :src="uploadedImage" alt="Uploaded Image" />
     <div class="clear-btn-container">
-      <ClearUploadBtn />
+      <ClearUploadBtn @clear="uploadedImage = null" />
     </div>
   </div>
 </template>
@@ -26,16 +26,16 @@ const file = ref(null);
 const uploadedImage = ref(null);
 
 const handleUpload = async (event) => {
-  file.value = event.target.files[0]; 
+  file.value = event.target.files[0];
   if (file.value) await uploadFile();
 };
 
 const handleDrop = async (event) => {
   event.preventDefault();
-  file.value = event.dataTransfer.files[0]; 
-  if (file.value) await uploadFile(); 
+  file.value = event.dataTransfer.files[0];
+  if (file.value) await uploadFile();
 };
- 
+
 const uploadFile = async () => {
   if (!file.value) return;
 
@@ -53,13 +53,13 @@ const uploadFile = async () => {
     alert("File uploaded successfully!");
 
     const imageToken = response.data.image;
-    const imageResponse = await axios.get(`http://127.0.0.1:5000/getImg?token=${imageToken}`, {
+    const imageResponse = await axios.get(`http://127.0.0.1:5000/get-preview?token=${imageToken}`, {
       responseType: "blob",
     });
     uploadedImage.value = URL.createObjectURL(imageResponse.data);
   } catch (error) {
     console.error("Upload error:", error);
-    alert("Upload error.");
+    alert("Upload error: "+error.response.data.error);
   }
 };
 </script>

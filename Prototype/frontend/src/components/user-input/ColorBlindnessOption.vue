@@ -1,14 +1,20 @@
 <template>
     <div class="option-container" @click="toggleSelect">
-      <div class="circle" :class="{ selected: isSelected }"></div>
-      <p>{{ typeName }} Color Blindness</p>
-      <a :href="hlink" target="_blank">
-        <img src="../icons/external-link.svg" alt="Learn More"/>
-      </a>
+      <div class="circle-container">
+        <div class="circle" :class="{ selected: isSelected }"></div>
+      </div>
+      <div class="option-text">
+        <div class="option-title">{{ optionTitle }} 
+          <a v-if="type" :href="hlink" target="_blank">
+            <img src="../icons/external-link.svg" alt="Learn More"/>
+          </a>
+        </div>
+        <div class="option-subtitle">{{ optionSubtitle }}</div>
+      </div>
     </div>
   </template>
   
-  <script setup>
+<script setup>
   import { computed } from 'vue';
   
   const props = defineProps({
@@ -21,36 +27,59 @@
     emit("select", props.type); 
   };
   
-  const typeName = computed(() => {
+  const optionTitle = computed(() => {
     switch (props.type) {
-      case 'rg':
-        return 'Red-Green';
-      case 'by':
-        return 'Blue-Yellow';
-      case 'complete':
-        return 'Complete';
-      default:
+      case 'default':
+        return 'Default';
+      case 'prot':
+        return 'Red Color Blindness';
+      case 'deut':
+        return 'Green Color Blindness';
+      case 'trit':
+        return 'Blue Color Blindness';
+      case 'gray':
+        return 'Complete Color Blindness';
+    }
+  });
+
+  const optionSubtitle = computed(() => {
+    switch (props.type) {
+      case 'default':
+        return 'Generally accessible to most people';
+      case 'prot':
+        return 'Protanopia / Protanomaly';
+      case 'deut':
+        return 'Deuteranopia / Deuteranomaly';
+      case 'trit':
+        return 'Tritanopia / Tritanomaly';
+      case 'gray':
         return '';
     }
   });
 
-  const hlink = computed(() => { // TODO: link to info page
+  const hlink = computed(() => {
     switch (props.type) {
-      case 'rg':
-        return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=seeing%20different%20colors.-,Red%2Dgreen%20color%20vision%20deficiency,-The%20most%20common';
-      case 'by':
-        return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=green%20at%20all.-,Blue%2Dyellow%20color%20vision%20deficiency,-This%20less%2Dcommon';
+      case 'prot':
+        return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=color%20vision%20deficiency%3A-,Deuteranomaly,-is%20the%20most';
+      case 'deut':
+        return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=of%20normal%20activities.-,Protanomaly,-makes%20certain%20shades';
+      case 'trit':
+        return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=color%20vision%20deficiency%3A-,Tritanomaly,-makes%20it%20hard';
       case 'complete':
         return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=look%20less%20bright.-,Complete%20color%20vision%20deficiency,-If%20you%20have';
     }
   });
-  </script>
+</script>
   
-  <style scoped>
+<style scoped>
   .option-container {
     display: flex;
-    align-items: center;
+    flex-direction: row;
     margin: 10px 0;
+  }
+
+  .circle-container {
+    padding-top: 10px;
   }
   
   .circle {
@@ -68,12 +97,27 @@
   }
   
   img {
+    padding-top: 10px;
     height: 35px;
-    margin-left: 10px
+    margin-left: 10px;
+    transition: filter 0.3s ease;
   }
 
-  p {
-    font-size: 40px;
+  img:hover {
+    filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(200%) hue-rotate(180deg);
   }
-  </style>
+
+  .option-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .option-title {
+    font-size: 30px;
+  }
+  .option-subtitle {
+    font-size: 25px;
+    color: gray;
+  }
+
+</style>
   
