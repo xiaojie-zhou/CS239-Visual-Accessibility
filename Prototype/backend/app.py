@@ -88,6 +88,17 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
+@app.route("/get-preview", methods=["GET"])
+def get_preview():
+    token = request.args.get("token")
+    if token not in file_store:
+        return jsonify({"error": "Invalid token"}), 400
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    if os.path.exists(file_path):
+        return send_file(file_path), 200
+    else:
+        return jsonify({"error": "Image not found."}), 404
+
 @app.route("/clear", methods=["POST"])
 def clear():
     # Clear the uploaded folder
@@ -103,8 +114,8 @@ def clear():
     file_store.clear()
     return jsonify({"message": "All files cleared."}), 200
 
-@app.route("/getImg", methods=["GET"])
-def get_image():
+@app.route("/get-result", methods=["GET"])
+def get_result():
     token = request.args.get("token")
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
@@ -131,8 +142,8 @@ def get_image():
         print(output_path)
         return jsonify({"error": "Image not generated."}), 500
 
-@app.route("/simulate", methods=["GET"])
-def simulate():
+@app.route("/get-simulation", methods=["GET"])
+def get_simulation():
     # require: ?token= & color=
     # color: ['prot', 'deut', 'trit']
     token = request.args.get("token")
