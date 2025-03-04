@@ -59,7 +59,7 @@ const uploadFile = async () => {
     uploadedImage.value = URL.createObjectURL(imageResponse.data);
   } catch (error) {
     console.error("Upload error:", error);
-    alert("Upload error.");
+    alert("Upload error: "+error.response.data.error);
   }
 };
 </script>
