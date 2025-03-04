@@ -32,7 +32,7 @@ plt.xticks([r + barWidth for r in range(len(r4))], ['DD', 'with himself', 'with 
  
 # Create labels
 label = ['n = 6', 'n = 25', 'n = 13', 'n = 36', 'n = 30', 'n = 11', 'n = 16', 'n = 37', 'n = 14', 'n = 4', 'n = 31', 'n = 34']
- 
+
 # Text on the top of each bar
 for i in range(len(r4)):
     plt.text(x = r4[i]-0.5 , y = bars4[i]+0.1, s = label[i], size = 6)

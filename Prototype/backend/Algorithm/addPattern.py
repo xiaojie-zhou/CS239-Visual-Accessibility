@@ -4,13 +4,14 @@ from sklearn.cluster import DBSCAN
 from scipy.spatial.distance import euclidean
 import os
 
-def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color=True):
+def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color=True, color_palette='normal_vision'):
     """
     Adjust colors and add hatch patterns to bars in a bar plot image.
     :param input_path: Path to the input image
     :param output_folder: Path to the output folder
     :param hatch_alpha: Alpha value for blending the hatches with the original image
     :param change_color: If True, the bars will be colored with a predefined color palette
+    :param color_palette: choose from ['normal_vision', 'Prot', 'Deut', 'Trit', 'gray']
 
     Results:
     - hatched_bars.png: The image with hatched patterns on the bars
@@ -171,8 +172,16 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # cv2.imshow('Grouped Bars', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-
-    acadia_color_palettes = ['#FED789FF', '#023743FF', '#72874EFF', '#476F84FF', '#A4BED5FF', '#453947FF']
+    
+    # reference: https://davidmathlogic.com/colorblind
+    acadia_color_palettes = {
+    'normal_vision': ['#FED789', '#023743', '#72874E', '#476F84', '#A4BED5', '#453947'],
+    'Prot': ['#332288', '#117733', '#44AA99', '#88CCEE', '#DDCC77', '#CC6677', '#AA4499', '#882255', '#661100'],
+    'Deut': ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000'],
+    'Trit': ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7'],
+    'gray': ['#000000', '#666666', '#999999', '#CCCCCC', '#DDDDDD', '#EEEEEE']
+    }
+    acadia_color_palette = acadia_color_palettes[color_palette]
 
 
     # Step 4: Create hatch patterns
@@ -189,7 +198,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     hatch_overlay = np.zeros_like(original, dtype=np.uint8) # for hatches
     for i, (group, bar_list) in enumerate(group_bars.items()):
         if change_color:
-            bar_color = acadia_color_palettes[i % len(acadia_color_palettes)]
+            bar_color = acadia_color_palette[i % len(acadia_color_palette)]
             bar_color = tuple(int(bar_color[i:i+2], 16) for i in (1, 3, 5))
             for (xb, yb, wb, hb) in bar_list:
                 cv2.rectangle(color_overlay, (xb, yb), (xb+wb, yb+hb), bar_color, -1)
@@ -274,4 +283,4 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 if __name__ == '__main__':
     # Usage
     add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
-                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True)
+                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal_vision')
