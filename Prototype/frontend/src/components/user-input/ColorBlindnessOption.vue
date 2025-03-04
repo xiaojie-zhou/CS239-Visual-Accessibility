@@ -8,7 +8,7 @@
     </div>
   </template>
   
-  <script setup>
+<script setup>
   import { computed } from 'vue';
   
   const props = defineProps({
@@ -44,9 +44,9 @@
         return 'https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness/types-color-vision-deficiency#:~:text=look%20less%20bright.-,Complete%20color%20vision%20deficiency,-If%20you%20have';
     }
   });
-  </script>
+</script>
   
-  <style scoped>
+<style scoped>
   .option-container {
     display: flex;
     align-items: center;
@@ -75,5 +75,5 @@
   p {
     font-size: 40px;
   }
-  </style>
+</style>
   

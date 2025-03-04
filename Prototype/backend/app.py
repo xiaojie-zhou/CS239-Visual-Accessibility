@@ -93,9 +93,9 @@ def clear():
     # Clear the uploaded folder
     for file in os.listdir(app.config["UPLOAD_FOLDER"]):
         os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
-    # Clear the output folder
-    for file in os.listdir(app.config["OUTPUT_FOLDER"]):
-        os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
+    # Clear the output folder # no need to clear outputs bc they are not generated yet
+    # for file in os.listdir(app.config["OUTPUT_FOLDER"]):
+    #     os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
 
     file_store.clear()
     return jsonify({"message": "All files cleared."}), 200
