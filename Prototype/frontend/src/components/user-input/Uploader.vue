@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-box" @dragover.prevent @drop="handleDrop">
+  <div v-if="!uploadedImage" class="upload-box" @dragover.prevent @drop="handleDrop">
     <input type="file" id="fileInput" class="file-input" @change="handleUpload" accept=".png,.jpeg,.jpg" />
     <div>
       <label for="fileInput" class="upload-label">
@@ -8,12 +8,12 @@
         <p class="hint">Maximum size: 500 MB</p>
       </label>
     </div>
+  </div>
+  <div v-else class="upload-box">
+    <img :src="uploadedImage" alt="Uploaded Image" /> 
     <div class="clear-btn-container">
       <ClearUploadBtn />
     </div>
-
-    <!-- TODO -->
-    <img v-if="processedImage" :src="processedImage" alt="Uploaded Image" /> 
   </div>
 </template>
 
@@ -23,18 +23,16 @@ import axios from "axios";
 import ClearUploadBtn from "./ClearUploadBtn.vue";
 
 const file = ref(null);
-const processedImage = ref(null);
+const uploadedImage = ref(null);
 
 const handleUpload = async (event) => {
   file.value = event.target.files[0]; 
-  console.log("Selected file:", file.value);
   if (file.value) await uploadFile();
 };
 
 const handleDrop = async (event) => {
   event.preventDefault();
   file.value = event.dataTransfer.files[0]; 
-  console.log("Dropped file:", file.value);
   if (file.value) await uploadFile(); 
 };
  
@@ -55,14 +53,13 @@ const uploadFile = async () => {
     alert("File uploaded successfully!");
 
     const imageToken = response.data.image;
-    const imageResponse = await axios.get(`http://127.0.0.1:5000/getImg/${imageToken}`, {
+    const imageResponse = await axios.get(`http://127.0.0.1:5000/getImg?token=${imageToken}`, {
       responseType: "blob",
     });
-    processedImage.value = URL.createObjectURL(imageResponse.data);
-    alert("File rendered successfully!");
+    uploadedImage.value = URL.createObjectURL(imageResponse.data);
   } catch (error) {
     console.error("Upload error:", error);
-    alert("Error.");
+    alert("Upload error.");
   }
 };
 </script>
@@ -111,5 +108,12 @@ const uploadFile = async () => {
   position: absolute;
   bottom: 10px;
   right: 10px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
 }
 </style>
