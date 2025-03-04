@@ -84,9 +84,10 @@ def convert_to_png(image_path):
         img.convert("RGBA").save(new_path, "PNG")
     return new_path
 
-@app.route("/getImg/<token>", methods=["GET"])
-@app.route("/getImg/<token>/<color>", methods=["GET"])
-def get_image(token, color=None):
+@app.route("/getImg", methods=["GET"])
+def get_image():
+    token = request.args.get("token")
+    color = request.args.get("color")
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
