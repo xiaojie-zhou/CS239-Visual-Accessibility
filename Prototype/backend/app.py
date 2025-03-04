@@ -73,19 +73,22 @@ def upload():
         return jsonify({"error": "Upload os path non-exist."}), 500
 
 def is_valid_image(file_path):
-    """Check if the file is a real image"""
+    """Check if a file is a valid and readable image."""
     try:
-        img = Image.open(file_path)
-        img.verify()
+        with Image.open(file_path) as img:
+            img.verify()  # Quick check for file integrity
+            img = Image.open(file_path)  # Reopen because verify() leaves the image in an unusable state
+            img.load()  # Load full image to ensure it's not corrupted
         return True
     except (IOError, SyntaxError):
         return False
-    
+
 def convert_to_png(image_path):
     """Convert any image to PNG format"""
     new_path = os.path.splitext(image_path)[0] + ".png"
     with Image.open(image_path) as img:
         img.convert("RGBA").save(new_path, "PNG")
+    os.remove(image_path)  # Delete original file
     return new_path
 
 @app.route("/get-preview", methods=["GET"])
