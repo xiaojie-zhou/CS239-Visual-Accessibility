@@ -286,4 +286,4 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 if __name__ == '__main__':
     # Usage
     add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
-                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal_vision')
+                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
