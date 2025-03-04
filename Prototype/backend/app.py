@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, url_for
 from flask_cors import CORS
 from PIL import Image
 import os
 from datetime import datetime
 from Algorithm.addPattern import add_hatches_to_bars
 import uuid
+from Algorithm.simulate_colorblind import simulate_colorblind
 
 app = Flask(__name__)
 CORS(app)
@@ -15,10 +16,14 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
 # Define the output directory
 OUTPUT_FOLDER = os.path.join(os.getcwd(), "output")  # Saves in the current project directory
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)  # Ensure the folder exists
+# Define the simulated directory
+SIMULATED_FOLDER = os.path.join(os.getcwd(), "simulation")  # Saves in the current project directory
+os.makedirs(SIMULATED_FOLDER, exist_ok=True)  # Ensure the folder exists
 
 # Configure Flask to use this directory for uploaded files
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
+app.config["SIMULATED_FOLDER"] = SIMULATED_FOLDER
 
 # Store the uploaded file paths in memory
 # {token: file_name}
@@ -67,7 +72,6 @@ def upload():
     else:
         return jsonify({"error": "Upload os path non-exist."}), 500
 
-
 def is_valid_image(file_path):
     """Check if the file is a real image"""
     try:
@@ -99,8 +103,6 @@ def clear():
 @app.route("/getImg", methods=["GET"])
 def get_image():
     token = request.args.get("token")
-    # ['normal', 'prot', 'deut', 'trit', 'gray']
-
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
@@ -126,3 +128,36 @@ def get_image():
     # else:
     #     print(output_path)
     #     return jsonify({"error": "Image not generated."}), 500
+
+@app.route("/simulate", methods=["POST"])
+def simulate():
+    # require: ?token= & color=
+    # color: ['prot', 'deut', 'trit']
+    token = request.args.get("token")
+    if token not in file_store:
+        return jsonify({"error": "Invalid token"}), 400
+    base_filename = file_store[token]
+
+    color = request.args.get("color")
+    if color not in ['prot', 'deut', 'trit']:
+        return jsonify({"error": "Invalid color"}), 400
+
+    simulated_folder = app.config["SIMULATED_FOLDER"]
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], base_filename + ".png")
+
+    simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
+
+    # Paths of generated images
+    simulated_images = {
+        "prot": os.path.join(simulated_folder, f"{base_filename}_PROTAN.png"),
+        "deut": os.path.join(simulated_folder, f"{base_filename}_DEUTAN.png"),
+        "trit": os.path.join(simulated_folder, f"{base_filename}_TRITAN.png"),
+    }
+    # Check if all simulated images exist
+    for key, path in simulated_images.items():
+        if not os.path.exists(path):
+            return jsonify({"error": f"Simulation failed for {key}"}), 500
+
+    return send_file(simulated_images[color], mimetype="image/png")
+
+
