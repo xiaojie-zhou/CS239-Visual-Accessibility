@@ -115,7 +115,7 @@ def get_image():
     if color is None: #retrieve the original copy for uploader rendering
         if not os.path.exists(file_path):
             return jsonify({"error": "File not found"}), 404
-        return send_file(file_path, mimetype="image/png")
+        return send_file(file_path, mimetype="image/png"), 200
     else: # TODO: retrieve the processed image
         return jsonify({"error": "TODO"}), 400
 
@@ -158,6 +158,6 @@ def simulate():
         if not os.path.exists(path):
             return jsonify({"error": f"Simulation failed for {key}"}), 500
 
-    return send_file(simulated_images[color], mimetype="image/png")
+    return send_file(simulated_images[color], mimetype="image/png"), 200
 
 
