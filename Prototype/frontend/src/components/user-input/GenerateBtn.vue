@@ -13,15 +13,6 @@
   </template>
   
   <script setup>
-  import { defineProps } from 'vue';
-  
-  const props = defineProps({
-    isDisabled: {
-      type: Boolean,
-      default: false, // TODO
-    },
-  });
-  
   const handleClick = () => {
     console.log("Generate btn clicked")
   };
@@ -45,15 +36,6 @@
   
   .button:focus {
     outline: none;
-  }
-  
-  .button:disabled {
-    background-color: #ccc; /* Gray background when disabled */
-    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
-  }
-  
-  .button.disabled {
-    opacity: 0.6;
   }
 
   p {

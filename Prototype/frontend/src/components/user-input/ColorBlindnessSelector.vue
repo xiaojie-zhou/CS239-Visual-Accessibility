@@ -1,7 +1,7 @@
 <script setup>
 import ColorBlindnessOption from './ColorBlindnessOption.vue'
 import { ref } from 'vue';
-const selectedType = ref(null);
+const selectedType = ref('default');
 const handleSelection = (type) => {
   selectedType.value = type;
 };
@@ -12,9 +12,11 @@ const handleSelection = (type) => {
         Choose the type of color blindness:
     </div>
     <div>
-        <ColorBlindnessOption type="rg" :selectedType="selectedType" @select="handleSelection"/>
-        <ColorBlindnessOption type="by" :selectedType="selectedType" @select="handleSelection"/>
-        <ColorBlindnessOption type="complete" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="default" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="prot" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="deut" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="trit" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="gray" :selectedType="selectedType" @select="handleSelection"/>
     </div>
 </template>
 
