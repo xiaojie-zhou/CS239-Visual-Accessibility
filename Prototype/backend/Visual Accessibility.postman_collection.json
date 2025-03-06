@@ -39,7 +39,7 @@
 			"response": []
 		},
 		{
-			"name": "getImg",
+			"name": "get-result",
 			"event": [
 				{
 					"listen": "test",
@@ -81,7 +81,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:5000/getImg?token=f8b4d5f3c9974d6681d7890bd2e99af9&color=deut&hatch=False",
+					"raw": "http://127.0.0.1:5000/get-result?token=d930c39ada6a484aaf77b6af45f92faf&color=trit&hatch=t",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -91,20 +91,20 @@
 					],
 					"port": "5000",
 					"path": [
-						"getImg"
+						"get-result"
 					],
 					"query": [
 						{
 							"key": "token",
-							"value": "f8b4d5f3c9974d6681d7890bd2e99af9"
+							"value": "d930c39ada6a484aaf77b6af45f92faf"
 						},
 						{
 							"key": "color",
-							"value": "deut"
+							"value": "trit"
 						},
 						{
 							"key": "hatch",
-							"value": "False"
+							"value": "t"
 						}
 					]
 				}
@@ -112,7 +112,7 @@
 			"response": []
 		},
 		{
-			"name": "simulate",
+			"name": "get-simulation",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -120,7 +120,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/simulate?token=f8b4d5f3c9974d6681d7890bd2e99af9&color=prot",
+					"raw": "http://127.0.0.1:5000/get-simulation?token=d930c39ada6a484aaf77b6af45f92faf&color=deut",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -130,16 +130,47 @@
 					],
 					"port": "5000",
 					"path": [
-						"simulate"
+						"get-simulation"
 					],
 					"query": [
 						{
 							"key": "token",
-							"value": "f8b4d5f3c9974d6681d7890bd2e99af9"
+							"value": "d930c39ada6a484aaf77b6af45f92faf"
 						},
 						{
 							"key": "color",
-							"value": "prot"
+							"value": "deut"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-preview",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/get-preview?token=d930c39ada6a484aaf77b6af45f92faf",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get-preview"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "d930c39ada6a484aaf77b6af45f92faf"
 						}
 					]
 				}
@@ -201,6 +232,37 @@
 					"port": "5000",
 					"path": [
 						"clear"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get-score",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/get-score?token=d930c39ada6a484aaf77b6af45f92faf",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"get-score"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "d930c39ada6a484aaf77b6af45f92faf"
+						}
 					]
 				}
 			},
