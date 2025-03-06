@@ -67,7 +67,8 @@ def simulate_colorblind_multiple_input(image_list, severity=1):
     return filtered_images
 
 if __name__ == '__main__':
-    simulate_colorblind('/Prototype/backend/Algorithm/test/barplot_raw.png', "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation")
+    for dpi in [50, 100, 150, 200, 250, 300]:
+        simulate_colorblind(f'./Prototype/backend/Algorithm/examples/barplot_dpi{dpi}.png', "./Prototype/backend/simulation/")
     # image_list = ['Prototype/backend/Algorithm/barplot_raw.png',
     #               'Prototype/backend/Algorithm/color_adjusted.png',
     #               'Prototype/backend/Algorithm/hatched_bars.png']
