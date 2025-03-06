@@ -1,0 +1,4 @@
+# This folder is intentionally left empty.
+# It is required for temporary files or generated outputs.
+*
+!.gitignore

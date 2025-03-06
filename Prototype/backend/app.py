@@ -40,12 +40,12 @@ def upload():
 # def upload(color=None):
     """assuming uploaded in FormData"""
     if "file" not in request.files:
-        return jsonify({"error": "No file part"}), 400
+        return jsonify({"error": "No file uploaded. Frontend did send request without file"}), 400
 
     file = request.files["file"]
 
     if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
+        return jsonify({"error": "No selected file. Wouldn't happen unless misusing"}), 400
 
     # Extract file extension
     file_ext = os.path.splitext(file.filename)[1]
@@ -71,7 +71,7 @@ def upload():
         file_store[token] = new_filename
         return jsonify({"image": token}), 200
     else:
-        return jsonify({"error": "Upload os path non-exist."}), 500
+        return jsonify({"error": "Upload os path non-exist. Backend error."}), 500
 
 def is_valid_image(file_path):
     """Check if a file is a valid and readable image."""
@@ -101,19 +101,28 @@ def get_preview():
     if os.path.exists(file_path):
         return send_file(file_path), 200
     else:
-        return jsonify({"error": "Image not found."}), 404
+        return jsonify({"error": "Token available, but image not found. This should not happen"}), 404
 
 @app.route("/clear", methods=["POST"])
 def clear():
-    # Clear the uploaded folder
+    # Clear the uploaded folder but keep .gitignore
     for file in os.listdir(app.config["UPLOAD_FOLDER"]):
-        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
-    # # Clear the output folder
-    # for file in os.listdir(app.config["OUTPUT_FOLDER"]):
-    #     os.remove(os.path.join(app.config["OUTPUT_FOLDER"], file))
-    # # Clear the simulated folder
-    # for file in os.listdir(app.config["SIMULATED_FOLDER"]):
-    #     os.remove(os.path.join(app.config["SIMULATED_FOLDER"], file))
+        file_path = os.path.join(app.config["UPLOAD_FOLDER"], file)
+        if file != ".gitignore":  # Skip .gitignore
+            os.remove(file_path)
+
+    # Below are not in the workflow, but for our own convenience
+    # Clear the output folder but keep .gitignore
+    for file in os.listdir(app.config["OUTPUT_FOLDER"]):
+        file_path = os.path.join(app.config["OUTPUT_FOLDER"], file)
+        if file != ".gitignore":
+            os.remove(file_path)
+
+    # Clear the simulated folder but keep .gitignore
+    for file in os.listdir(app.config["SIMULATED_FOLDER"]):
+        file_path = os.path.join(app.config["SIMULATED_FOLDER"], file)
+        if file != ".gitignore":
+            os.remove(file_path)
 
     file_store.clear()
     return jsonify({"message": "All files cleared."}), 200
@@ -130,9 +139,12 @@ def get_result():
     if color is None:
         color = "normal"
     if color not in ['normal', 'prot', 'deut', 'trit', 'gray']:
-        return jsonify({"error": "Invalid color"}), 400
+        return jsonify({"error": "Invalid color. Frontend bad request"}), 400
 
-    add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"], color_palette=color)
+    try:
+        add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"], color_palette=color)
+    except Exception as e:
+        return jsonify({"error": f"Failed to generate image: {str(e)}"}), 500
 
     hatch = request.args.get("hatch")
     if hatch == "False":
@@ -144,7 +156,7 @@ def get_result():
         return send_file(output_path), 200
     else:
         print(output_path)
-        return jsonify({"error": "Image not generated."}), 500
+        return jsonify({"error": "Image not generated. Should not happen."}), 500
 
 @app.route("/get-simulation", methods=["GET"])
 def get_simulation():
@@ -176,7 +188,6 @@ def get_simulation():
             return jsonify({"error": f"Simulation failed for {key}"}), 500
 
     return send_file(simulated_images[color], mimetype="image/png"), 200
-
 
 @app.route("/get-score", methods=["GET"])
 def get_score():
