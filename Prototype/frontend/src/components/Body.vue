@@ -1,16 +1,29 @@
 <script setup>
-import UserInputColumn from './user-input/UserInputColumn.vue'
-import ResultColumn from './result/ResultColumn.vue'
+  import UserInputColumn from './user-input/UserInputColumn.vue'
+  import { ref } from 'vue'
+  import Feedback from './result/Feedback.vue'
+  import NullState from './result/NullState.vue'
+  
+  const fetchedScore = ref(null);
+  const newImageURL = ref(null);
+
+  const handleResultFetchParent = (result) => {
+    fetchedScore.value = result.score;
+    newImageURL.value = result.newImageURL;
+    console.log("[Body]score received from UserInputCol="+result.score);
+  }
 </script>
 
 <template>
   <div class="body-container">
-    <UserInputColumn class="column"/>
+    <UserInputColumn class="column" @result-fetched-parent="handleResultFetchParent"/>
     <div class="column separator-container">
-      <div class="separator">
-      </div>
+      <div class="separator"></div>
     </div>
-    <ResultColumn class="column"/>
+    <div class="result-container">
+      <NullState v-if="!fetchedScore" />
+      <Feedback  v-if="fetchedScore" :score="fetchedScore"/>
+    </div>
   </div>
 </template>
 
@@ -35,5 +48,8 @@ import ResultColumn from './result/ResultColumn.vue'
 }
 .separator-container {
   margin: 30px;
+}
+.result-container {
+  width: 700px;
 }
 </style>

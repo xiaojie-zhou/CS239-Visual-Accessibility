@@ -12,18 +12,20 @@
   <div v-else class="upload-box">
     <img :src="uploadedImage" alt="Uploaded Image" />
     <div class="clear-btn-container">
-      <ClearUploadBtn @clear="uploadedImage = null" />
+      <ClearUploadBtn @clear="clearUpload" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import axios from "axios";
 import ClearUploadBtn from "./ClearUploadBtn.vue";
 
 const file = ref(null);
 const uploadedImage = ref(null);
+const imageToken = ref(null);
+const emit = defineEmits(["image-uploaded"]);
 
 const handleUpload = async (event) => {
   file.value = event.target.files[0];
@@ -42,7 +44,9 @@ const uploadFile = async () => {
   const formData = new FormData();
   formData.append("file", file.value);
 
+
   try {
+    // post the image
     const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -50,18 +54,32 @@ const uploadFile = async () => {
       alert("Upload failed. No token received.");
       return;
     }
-    alert("File uploaded successfully!");
+    alert("File uploaded successfully!"+response.data.image);
 
-    const imageToken = response.data.image;
-    const imageResponse = await axios.get(`http://127.0.0.1:5000/get-preview?token=${imageToken}`, {
+    // get the preview
+    const imageResponse = await axios.get(`http://127.0.0.1:5000/get-preview?token=${response.data.image}`, {
       responseType: "blob",
     });
     uploadedImage.value = URL.createObjectURL(imageResponse.data);
+
+    // emit token after successful upload
+    imageToken.value = response.data.image;
+    emit("image-uploaded", imageToken.value); 
+
   } catch (error) {
     console.error("Upload error:", error);
     alert("Upload error: "+error.response.data.error);
   }
 };
+
+const clearUpload = () => {
+  uploadedImage.value = null;
+
+  // emit null token when image is cleared
+  imageToken.value = null;
+  emit("image-uploaded", null); 
+};
+
 </script>
 
 <style scoped>

@@ -29,11 +29,10 @@
 <script setup>
   import { defineProps, computed } from 'vue';
   const props = defineProps({
-    score: {
-      type: Number,
-      require: true,
-    }
+    score: Number
   });
+  console.log("[Score]: score="+props.score)
+
   const circumference = computed(() => 2 * Math.PI * 50); // r = 50
   const minScore = 0;
   const maxScore = 100;
@@ -73,11 +72,11 @@
     } else if (props.score >= 80) {
       return "This graph is already highly accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 60) {
-      return "This graph is generally accessible, and here is the new version with minor improvements:";
+      return "This graph is generally accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 40) {
-      return "Some users may struggle interpreting this graph. Here's the enhanced version:";
+      return "Some users may struggle interpreting this graph. Here's the enhanced version.";
     } else {
-      return "Most users with color vision deficiency may find it hard to interpret this graph. Here's the enhanced version with significant improvements:";
+      return "Most users with color vision deficiency may find it hard to interpret this graph. Here's the enhanced version with significant improvements.";
     }
   });
   console.log(color);
