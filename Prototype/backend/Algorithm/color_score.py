@@ -3,6 +3,9 @@ import numpy as np
 from skimage.color import rgb2gray
 from sklearn.cluster import KMeans
 from daltonlens import simulate
+from colormath.color_objects import sRGBColor, LabColor
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cie2000
 
 
 def extract_dominant_colors_from_image(image, k=5):
@@ -89,32 +92,41 @@ def simulate_color_blindness(image_path, deficiency='deuteranopia'):
     simulated_image = simulator.simulate_cvd(image, deficiency=deficiency_type, severity=1.0)
     return simulated_image
 
+
 def get_color_blindness_score(image_path):
-    """ 直接评估色盲用户是否能区分颜色，而不是和原图比 """
+    """ 计算色盲用户是否能区分颜色，使用 CIEDE2000 计算颜色感知差异 """
     image = cv2.imread(image_path)
-    simulated = simulate_color_blindness(image_path, 'deuteranopia')
+    simulated = simulate_color_blindness(image_path, 'deuteranopia')  # 仅测红绿色盲
 
     # 提取色盲模拟图像的主色调
-    colors = extract_dominant_colors_from_image(simulated, k=5)  # 提取 5 种主色
+    colors = extract_dominant_colors_from_image(simulated, k=5)
     color_distances = []
 
-    # 计算所有颜色之间的欧几里得距离，判断它们的区分度
+    # 计算所有颜色之间的 CIEDE2000 颜色感知差异
     for i in range(len(colors)):
         for j in range(i + 1, len(colors)):
-            dist = np.linalg.norm(colors[i] - colors[j])  # 计算颜色向量之间的距离
+            color1_rgb = sRGBColor(*colors[i] / 255.0)
+            color2_rgb = sRGBColor(*colors[j] / 255.0)
+
+            # 转换为 Lab 颜色空间
+            color1_lab = convert_color(color1_rgb, LabColor)
+            color2_lab = convert_color(color2_rgb, LabColor)
+
+            # 计算 CIEDE2000 差异
+            dist = float(delta_e_cie2000(color1_lab, color2_lab))
             color_distances.append(dist)
 
     # 计算颜色差异的平均值
     mean_distance = np.mean(color_distances) if color_distances else 0
 
-    # 根据颜色差异分配评分
-    if mean_distance > 100:  # 颜色明显不同
+    # 根据颜色差异分配评分（调整后）
+    if mean_distance > 50:  # CIEDE2000 > 50 代表颜色明显不同
         return 10
-    elif mean_distance > 75:
+    elif mean_distance > 35:
         return 8
-    elif mean_distance > 50:
+    elif mean_distance > 20:
         return 6
-    elif mean_distance > 30:
+    elif mean_distance > 10:
         return 4
     else:
         return 2  # 颜色几乎相同，难以区分
@@ -163,6 +175,6 @@ def evaluate_graph(image_path):
     return round(total_score, 2)
 
 if __name__ == '__main__':
-    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/hatched_bars.png"
+    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png"
     score = evaluate_graph(image_path)
     print(f"📊 Graph Accessibility Score: {score}/100")
