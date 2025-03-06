@@ -13,9 +13,22 @@
   </template>
   
   <script setup>
-  const handleClick = () => {
+  const handleClick = async () => {
     console.log("Generate btn clicked")
+    try {
+      const response = await axios.get("http://127.0.0.1:5000/get-result?token=${imageToken}", formData, {
+        responseType: "blob",
+      });
+    uploadedImage.value = URL.createObjectURL(imageResponse.data);
+  } catch (error) {
+    console.error("Fetch result error:", error);
+  }
+
+
   };
+
+
+
   </script>
   
   <style scoped>

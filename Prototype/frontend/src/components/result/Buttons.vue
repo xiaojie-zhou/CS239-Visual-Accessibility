@@ -10,26 +10,22 @@
 </script>
 
 <template>
-  <div class="feedback-container">
-    <div class="new-diagram">
-        <!-- generated diagram here -->
-    </div>
-    <div class="buttons">
-        <SimulationBtn 
-          :isActive="activeTooltip === 'simulation'" 
-          @toggle="toggleTooltip('simulation')" 
-        />
-        <InfoBtn 
-          :isActive="activeTooltip === 'info'" 
-          @toggle="toggleTooltip('info')" 
-        />
-        <DownloadBtn />
-    </div>
-  </div>  
+<div class="buttons">
+    <SimulationBtn 
+        :isActive="activeTooltip === 'simulation'" 
+        @toggle="toggleTooltip('simulation')" 
+    />
+    <InfoBtn 
+        :isActive="activeTooltip === 'info'" 
+        @toggle="toggleTooltip('info')" 
+    />
+    <DownloadBtn />
+</div>
 </template>
 
 <style scoped>
   .feedback-container {
+    margin-top: 0px;
     display: flex;
     flex-direction: column;
   }

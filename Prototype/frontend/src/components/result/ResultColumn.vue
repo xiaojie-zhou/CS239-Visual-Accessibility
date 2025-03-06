@@ -1,17 +1,12 @@
 <script setup>
-import AdjustmentNullState from './AdjustmentNullState.vue'
-import AdjustmentLoadingState from './AdjustmentLoadingState.vue'
-import AdjustmentInapplicable from './AdjustmentInapplicable.vue'
-import AdjustmentApplied from './AdjustmentApplied.vue'
+import NullState from './NullState.vue'
+import Feedback from './Feedback.vue'
 </script>
 
 <template>
     <div class="right-column">
-      <!-- TODO: display one of the four states -->
-      <AdjustmentNullState />
-      <!-- <AdjustmentLoadingState /> -->
-      <!-- <AdjustmentApplied /> -->
-      <!-- <AdjustmentInapplicable /> -->
+      <!-- <NullState /> -->
+      <Feedback />
     </div>
 </template>
 

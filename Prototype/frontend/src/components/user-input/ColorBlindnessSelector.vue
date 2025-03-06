@@ -24,5 +24,6 @@ const handleSelection = (type) => {
 .title {
     color: black;
     font-size: 40px;
+    font-weight: 600;
 }
 </style>
