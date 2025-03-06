@@ -101,7 +101,7 @@ def get_preview():
     if os.path.exists(file_path):
         return send_file(file_path), 200
     else:
-        return jsonify({"error": "Image not found."}), 404
+        return jsonify({"error": "Token available, but image not found. This should not happen"}), 404
 
 @app.route("/clear", methods=["POST"])
 def clear():
@@ -176,7 +176,6 @@ def get_simulation():
             return jsonify({"error": f"Simulation failed for {key}"}), 500
 
     return send_file(simulated_images[color], mimetype="image/png"), 200
-
 
 @app.route("/get-score", methods=["GET"])
 def get_score():
