@@ -6,6 +6,7 @@ from datetime import datetime
 from Algorithm.addPattern import add_hatches_to_bars
 import uuid
 from Algorithm.simulate_colorblind import simulate_colorblind
+from Algorithm.evaluateFigure import evaluate_graph
 
 app = Flask(__name__)
 CORS(app)
@@ -175,5 +176,21 @@ def get_simulation():
             return jsonify({"error": f"Simulation failed for {key}"}), 500
 
     return send_file(simulated_images[color], mimetype="image/png"), 200
+
+
+@app.route("/get-score", methods=["GET"])
+def get_score():
+    # require: ?token=
+    token = request.args.get("token")
+    if token not in file_store:
+        return jsonify({"error": "Invalid token"}), 400
+    file_path = os.path.join(UPLOAD_FOLDER, file_store[token]+".png")
+
+    try:
+        score = evaluate_graph(file_path)
+        return jsonify({"score": score}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to evaluate graph: {str(e)}"}), 500
+
 
 

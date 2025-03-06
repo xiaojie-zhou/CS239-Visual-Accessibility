@@ -175,6 +175,6 @@ def evaluate_graph(image_path):
     return round(total_score, 2)
 
 if __name__ == '__main__':
-    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png"
+    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/hatched_bars.png"
     score = evaluate_graph(image_path)
     print(f"📊 Graph Accessibility Score: {score}/100")
