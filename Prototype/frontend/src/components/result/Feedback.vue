@@ -9,7 +9,6 @@
   console.log("[Feedback]: score="+props.score)
 </script>
 <template>
-  <!-- TODO: do not display downloader if score >= 95 -->
-    <Downloader :url="props.imageURL"/> 
+    <Downloader v-if="props.imageURL" :url="props.imageURL"/> 
     <Score :score="props.score"/>
 </template>

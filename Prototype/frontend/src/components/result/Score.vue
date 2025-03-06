@@ -29,7 +29,7 @@
 <script setup>
   import { defineProps, computed } from 'vue';
   const props = defineProps({
-    score: Number
+    score: Number // TODO: display 100 when score>=95
   });
   console.log("[Score]: score="+props.score)
 
@@ -88,6 +88,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  width: 700px;
 }
 
 .score-container {

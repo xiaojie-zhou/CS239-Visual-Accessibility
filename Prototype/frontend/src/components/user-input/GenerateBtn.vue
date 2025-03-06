@@ -54,7 +54,6 @@
   
     try {
       // Fetch Score 
-      
       // TODO: fix the issue of infinite wait
       // const scoreResponse = await axios.get(`http://127.0.0.1:5000/get-score?token=${props.token}`);
       // if (!scoreResponse.ok) {
@@ -62,6 +61,7 @@
       // }
       // const calculatedScore = scoreResponse.data.score;
       const calculatedScore = 55;
+      // const calculatedScore = 95;
       console.log("[GenerateBtn]: fetched score = "+calculatedScore);
 
       
