@@ -32,11 +32,22 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     
     # Step 1: Detect plot area using edge detection
-    edges = cv2.Canny(gray, 200, 255)
+    # # Using Canny edge detection
+    # edges = cv2.Canny(gray, 50, 150)
+
+    # Using Laplacian edge detection
+    edges = cv2.Laplacian(gray, cv2.CV_64F)
+    edges = cv2.convertScaleAbs(edges)
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     # Find the largest rectangular contour (plot area)
     plot_contour = max(contours, key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)))
+    # # draw the plot contour
+    # cv2.drawContours(img_rgb, [plot_contour], -1, (0, 255, 0), 2)
+    # cv2.imshow('Plot Contour', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
     x, y, w, h = cv2.boundingRect(plot_contour)
     x -= 5
     y -= 5
@@ -118,8 +129,8 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # cv2.imshow('Plot Area', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    # print(f"The bounding box of the plot area with width {w} and height {h}")
-    # print(f"Plotting area is {plot_area}")
+    print(f"The bounding box of the plot area with width {w} and height {h}")
+    print(f"Plotting area is {plot_area}")
 
     # # Crop to plot area
     plot_area = gray[y:y+h, x:x+w]
@@ -130,9 +141,17 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
                                   cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
                                   cv2.THRESH_BINARY_INV, 11, 2)
     
+    # # draw the thresholded image
+    # cv2.imshow('Thresholded Image', thresh)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     # Morphological operations to clean up
     kernel = np.ones((1,1), np.uint8)
     cleaned = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
+
+    # cv2.imshow('Cleaned Image', cleaned)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     
     # Find bar contours
@@ -158,6 +177,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         aspect_ratio = wb / float(hb)
         if aspect_ratio > 1.5:  # most likely a legend
             legends.append((xb, yb, wb, hb))
+            print("legend: ", wb, hb)
             continue
         # detect bars based on color variance
         roi = original[yb:yb+hb, xb:xb+wb]
@@ -387,6 +407,8 @@ if __name__ == '__main__':
     # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
     #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
     for dpi in [50, 100, 150, 200, 250, 300]:
-        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_dpi{dpi}.png', 
+        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/barplot_dpi{dpi}_color_adjusted.png', 
                             './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
+    # color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/test/barplot_9_0.png',
+    #                                 './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
     print(color_map)
