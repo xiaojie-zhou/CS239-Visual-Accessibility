@@ -15,10 +15,6 @@
         :isActive="activeTooltip === 'simulation'" 
         @toggle="toggleTooltip('simulation')" 
     />
-    <InfoBtn 
-        :isActive="activeTooltip === 'info'" 
-        @toggle="toggleTooltip('info')" 
-    />
     <DownloadBtn />
 </div>
 </template>

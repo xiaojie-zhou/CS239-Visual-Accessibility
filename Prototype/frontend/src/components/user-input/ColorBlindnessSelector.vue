@@ -12,7 +12,7 @@ const handleSelection = (type) => {
 
 <template>
     <div class="title">
-        Choose the type of color blindness:
+        Choose the type of color blindness
     </div>
     <div>
         <ColorBlindnessOption type="normal" :selectedType="selectedType" @select="handleSelection"/>
