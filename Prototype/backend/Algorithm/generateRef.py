@@ -43,7 +43,7 @@ def generateRefBarPlot():
     
     # Show graphic
     # plt.tight_layout()
-    plt.savefig('barplot_raw.png', dpi=150)
+    plt.savefig('./Prototype/backend/Algorithm/examples/barplot_dpi200.png', dpi=200)
     plt.show()
 
 def generateRefPieChart():    
@@ -53,12 +53,12 @@ def generateRefPieChart():
     values=[12, 11, 3, 30]
 
     # Label distance: gives the space between labels and the center of the pie
-    plt.pie(values, labels=names, labeldistance=1.15)
+    plt.pie(values, labels=names, labeldistance=1.15, colors=[(1, 0, 0.0, 1), (0, 1, 0, 1), (0,0,1, 1), (1,1,0, 1)])
             # wedgeprops = { 'linewidth' : 0, 'edgecolor' : 'white' }
     plt.tight_layout()
-    plt.savefig('piechart_raw.png', dpi=150)
+    plt.savefig('./Prototype/backend/Algorithm/piechart_raw.png', dpi=150)
     plt.show()
 
 if __name__ == '__main__':
-    # generateRefBarPlot()
-    generateRefPieChart()
+    generateRefBarPlot()
+    # generateRefPieChart()

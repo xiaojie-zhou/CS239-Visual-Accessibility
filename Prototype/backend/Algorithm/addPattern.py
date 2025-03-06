@@ -26,22 +26,102 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     img = cv2.imread(input_path)
     # get the image size
     height, width, _ = img.shape
-    print(height, width)
+    print(width, height)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     original = img_rgb.copy()
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     
     # Step 1: Detect plot area using edge detection
-    edges = cv2.Canny(gray, 50, 150)
+    edges = cv2.Canny(gray, 200, 255)
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     # Find the largest rectangular contour (plot area)
     plot_contour = max(contours, key=lambda cnt: cv2.contourArea(cv2.convexHull(cnt)))
     x, y, w, h = cv2.boundingRect(plot_contour)
+    x -= 5
+    y -= 5
+    w += 10
+    h += 10
 
-    # Crop to plot area
-    margin = 10  # Add some margin
-    x, y, w, h = x + margin, y + margin, w - 2*margin, h - 2*margin
+    x_left_margin, x_right_margin, y_top_margin, y_bottom_margin = 1,2,1,2
+    prev_avg_color = 0
+    for x_ in range(x, x+w):
+        color_point = [0, 0, 0]
+        for y_ in range(y, y+h):
+            color_point += original[y_, x_]
+        avg_color = np.mean(color_point/h)
+        x_left_margin += 1
+        if x_ == x:
+            prev_avg_color = avg_color
+            continue
+        else:
+            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+                break
+        prev_avg_color = avg_color
+
+    prev_avg_color = 0
+    for x_ in range(x+w-1, x, -1):
+        color_point = [0, 0, 0]
+        for y_ in range(y, y+h):
+            color_point += original[y_, x_]
+        avg_color = np.mean(color_point/h)
+        x_right_margin += 1
+        if x_ == x+w-1:
+            prev_avg_color = avg_color
+            continue
+        else:
+            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+                break
+        prev_avg_color = avg_color
+    print(x_left_margin, x_right_margin)
+    
+    prev_avg_color = 0
+    for y_ in range(y, y+h):
+        color_point = [0, 0, 0]
+        for x_ in range(x, x+w):
+            color_point += original[y_, x_]
+        avg_color = np.mean(color_point/w)
+        y_top_margin += 1
+        if y_ == y:
+            prev_avg_color = avg_color
+            continue
+        else:
+            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+                break
+        prev_avg_color = avg_color
+
+    prev_avg_color = 0    
+    for y_ in range(y+h-1, y, -1):
+        color_point = [0, 0, 0]
+        for x_ in range(x, x+w):
+            color_point += original[y_, x_]
+        avg_color = np.mean(color_point/w)
+        y_bottom_margin += 1
+        if y_ == y+h-1:
+            prev_avg_color = avg_color
+            continue
+        else:
+            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+                break
+        prev_avg_color = avg_color
+
+    print(y_top_margin, y_bottom_margin)
+
+    x = x + x_left_margin
+    y = y + y_top_margin
+    w = w - x_left_margin - x_right_margin
+    h = h - y_top_margin - y_bottom_margin
+
+    plot_area = w * h
+    # # draw the plot area
+    # cv2.rectangle(img_rgb, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    # cv2.imshow('Plot Area', cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # print(f"The bounding box of the plot area with width {w} and height {h}")
+    # print(f"Plotting area is {plot_area}")
+
+    # # Crop to plot area
     plot_area = gray[y:y+h, x:x+w]
     
     # Step 2: Detect bars within plot area
@@ -53,6 +133,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # Morphological operations to clean up
     kernel = np.ones((1,1), np.uint8)
     cleaned = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel, iterations=2)
+
     
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -75,22 +156,26 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         xb += x
         yb += y
         aspect_ratio = wb / float(hb)
-        if aspect_ratio > 1.5: # most likely a legend
+        if aspect_ratio > 1.5:  # most likely a legend
             legends.append((xb, yb, wb, hb))
             continue
         # detect bars based on color variance
-        roi = img_rgb[yb:yb+hb, xb:xb+wb]
+        roi = original[yb:yb+hb, xb:xb+wb]
         hsv_roi = cv2.cvtColor(roi, cv2.COLOR_RGB2HSV)
         h_variance = np.var(hsv_roi[:, :, 0])
         s_variance = np.var(hsv_roi[:, :, 1])
         v_variance = np.var(hsv_roi[:, :, 2])
-        if h_variance < 100 and s_variance < 100 and v_variance < 100:
-            bars.append((xb, yb, wb, hb + 7))
-    
+        print(h_variance, s_variance, v_variance)
+        if h_variance < 10 and s_variance < 10 and v_variance < 10:
+            bars.append((xb, yb, wb, hb))
+            bar_width = wb
+    print(legends)
     x_legend, y_legend, w_legend, h_legend = legends[0]
-    margin_legend = 5
+    print(w_legend, h_legend)
+    margin_legend = w_legend // 70
     x_legend, y_legend, w_legend, h_legend = x_legend + margin_legend, y_legend + margin_legend, w_legend - 2*margin_legend, h_legend - 2*margin_legend
     legend_area = gray[y_legend:y_legend+h_legend, x_legend:x_legend+w_legend]
+    legend_size = w_legend * h_legend
 
     # Adaptive thresholding for better bar detection
     thresh = cv2.adaptiveThreshold(legend_area, 255,
@@ -106,21 +191,27 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 
     # Filter and collect bars with coordinates in the original image space
     legend_bars = []
-    min_bar_area = 5 # Adjust based on image size
+    min_bar_area = legend_size * 0.01
+    # print("legend size: ", legend_size)
+    # min_bar_area = 5
     small_bar_margin = 0
     for cnt in legend_contours:
-        area = cv2.contourArea(cnt)
+        xb, yb, wb, hb = cv2.boundingRect(cnt)
+        area = wb * hb
         if area < min_bar_area:
             continue
-        xb, yb, wb, hb = cv2.boundingRect(cnt)
+        print("legend bar size: ", wb, hb)
+        print("area: ", area)
         xb = legends[0][0] + xb + margin_legend
         yb = legends[0][1] + yb + margin_legend
-        roi = img_rgb[yb:yb+hb, xb:xb+wb]
+        roi = original[yb:yb+hb, xb:xb+wb]
         hsv_roi = cv2.cvtColor(roi, cv2.COLOR_RGB2HSV)
         h_variance = np.var(hsv_roi[:, :, 0])
         s_variance = np.var(hsv_roi[:, :, 1])
         v_variance = np.var(hsv_roi[:, :, 2])
-        if h_variance < 100 and s_variance < 100 and v_variance < 100:
+        print(h_variance, s_variance, v_variance)
+
+        if h_variance < 10 and s_variance < 10 and v_variance < 10:
             legend_bars.append((xb + small_bar_margin, yb + small_bar_margin, wb -2*small_bar_margin, hb -2*small_bar_margin))
 
 
@@ -188,12 +279,18 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 
 
     # Step 4: Create hatch patterns
+    print("current width: ", w)
+    if w < 500:
+        thickness = 1
+    else:
+        thickness = 2
+    spacing = bar_width // 2
     patterns = [
-        {'type': 'horizontal', 'spacing': 8, 'thickness': 2},
-        {'type': 'vertical', 'spacing': 8, 'thickness': 2},
-        {'type': 'diagonal', 'spacing': 13, 'thickness': 2, 'slope': 1},
-        {'type': 'cross', 'spacing': 8, 'thickness': 2},
-        {'type': 'dots', 'spacing': 12, 'radius': 2}
+        {'type': 'horizontal', 'spacing': spacing //2, 'thickness': thickness},
+        {'type': 'vertical', 'spacing': spacing //2, 'thickness': thickness},
+        {'type': 'diagonal', 'spacing': spacing, 'thickness': thickness, 'slope': 1},
+        {'type': 'cross', 'spacing': spacing, 'thickness': thickness},
+        {'type': 'dots', 'spacing': spacing, 'radius': thickness}
     ]
     
     # Create overlay
@@ -251,7 +348,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
                     pt2_y = yb + hb - (xb + wb - x_start) * k
                     if pt2_y < yb:
                         pt2_x = x_start + hb / k
-                        pt2 = (int(pt2_x), yb)
+                        pt2 = (int(pt2_x)-1, yb)
                     else:
                         pt2 = (xb + wb, int(pt2_y))
                     cv2.line(hatch_overlay, pt1, pt2, color, pattern['thickness'])
@@ -265,7 +362,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
                     pt_2_y = y_start - k * wb
                     if pt_2_y < yb:
                         pt2_x = 2 * xb - (yb + k * xb - y_start)
-                        pt2 = (int(pt2_x), yb)
+                        pt2 = (int(pt2_x)-1, yb)
                     else:
                         pt2 = (xb + wb, int(pt_2_y))
                     cv2.line(hatch_overlay, pt1, pt2, color, pattern['thickness'])
@@ -289,6 +386,7 @@ if __name__ == '__main__':
     # Usage
     # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
     #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
-    color_map = add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
-                        './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
+    for dpi in [50, 100, 150, 200, 250, 300]:
+        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_dpi{dpi}.png', 
+                            './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
     print(color_map)

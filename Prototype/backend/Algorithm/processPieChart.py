@@ -9,36 +9,31 @@ import numpy as np
 import os
 import math
 
-def sample_line_color(img, center, angle, radius, num_samples=50):
+def sample_line_color(img, center, angle, radius):
     """
-    Sample the color along a line from the center to the edge at a given angle.
+    Sample the color at the midpoint along a line from the center to the edge at a given angle.
     :param img: Input image (RGB)
     :param center: (x, y) coordinates of the pie chart center
     :param angle: Angle in degrees (0-360)
     :param radius: Length of the sampling line
-    :param num_samples: Number of points to sample along the line
-    :return: Average color along the line
+    :return: Color at the midpoint along the line
     """
     x_center, y_center = center
     angle_rad = np.deg2rad(angle)  # Convert to radians
 
-    # Sample points along the line
-    colors = []
-    for i in range(num_samples):
-        r = (i / num_samples) * radius  # Progressively extend from center to radius
-        x = int(x_center + r * np.cos(angle_rad))
-        y = int(y_center + r * np.sin(angle_rad))
+    # Calculate midpoint coordinates
+    mid_radius = radius / 2
+    x = int(x_center + mid_radius * np.cos(angle_rad))
+    y = int(y_center + mid_radius * np.sin(angle_rad))
 
-        # Get pixel color (handle out-of-bounds cases)
-        if 0 <= x < img.shape[1] and 0 <= y < img.shape[0]:
-            colors.append(img[y, x])  # OpenCV uses (y, x)
-
-    # Compute average color (mean R, G, B)
-    avg_color = np.mean(colors, axis=0)
-    return tuple(map(int, avg_color))
+    # Get pixel color (handle out-of-bounds cases)
+    if 0 <= x < img.shape[1] and 0 <= y < img.shape[0]:
+        return tuple(map(int, img[y, x]))  # OpenCV uses (y, x)
+    else:
+        return (0, 0, 0)  # Return black if out-of-bounds
 
 
-def detect_pie_slices(img, center, radius, threshold=30):
+def detect_pie_slices(img, center, radius, threshold=5):
     """
     Detect pie chart slices by sampling colors along radial lines and tracking color changes.
     :param img: Input image (RGB)
@@ -69,7 +64,7 @@ def detect_pie_slices(img, center, radius, threshold=30):
         # Merge first and last regions
         angle_regions[0] = (angle_regions[-1][0], angle_regions[0][1], first_region_color)
         angle_regions.pop()
-
+    print(angle_regions)
     return angle_regions
 
 
@@ -115,12 +110,17 @@ def recolor_pie_chart(input_path, output_folder, color_palette=None):
         new_color = color_palette[i % len(color_palette)]
         new_color = tuple(int(new_color[i:i+2], 16) for i in (1, 3, 5))
 
-        # Draw filled slices
-        for angle in range(start_angle, end_angle + 1):
-            angle_rad = np.deg2rad(angle)
-            x1 = int(center[0] + radius * np.cos(angle_rad))
-            y1 = int(center[1] + radius * np.sin(angle_rad))
-            cv2.line(overlay, center, (x1, y1), new_color, thickness=2)
+        # Create a mask for the pie slice
+        mask = np.zeros_like(img_rgb, dtype=np.uint8)
+        cv2.ellipse(mask, center, (radius, radius), 0, start_angle, end_angle, (255, 255, 255), -1)
+
+        # Apply the new color to the pie slice
+        colored_slice = np.zeros_like(img_rgb, dtype=np.uint8)
+        colored_slice[:] = new_color
+        colored_slice = cv2.bitwise_and(colored_slice, mask)
+
+        # Overlay the colored slice onto the original image
+        overlay = cv2.addWeighted(overlay, 1, colored_slice, 1, 0)
 
     # Step 4: Save Output
     output_path = os.path.join(output_folder, f"{file_name}_recolored.png")
@@ -133,4 +133,4 @@ def recolor_pie_chart(input_path, output_folder, color_palette=None):
 if __name__ == '__main__':
     # Usage
     recolor_pie_chart('./Prototype/backend/Algorithm/piechart_raw.png', 
-                        './Prototype/backend/Algorithm/')
+                        './Prototype/backend/Algorithm/', color_palette='prot')
