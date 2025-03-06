@@ -4,6 +4,17 @@ from skimage.color import rgb2gray
 from sklearn.cluster import KMeans
 from daltonlens import simulate
 
+
+def extract_dominant_colors_from_image(image, k=5):
+    """ 使用 K-Means 聚类提取图像中的 k 个主要颜色 """
+    pixels = image.reshape(-1, 3)  # 重新调整形状，使其成为 RGB 值列表
+
+    kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)  # K-Means 聚类
+    kmeans.fit(pixels)
+
+    colors = kmeans.cluster_centers_.astype(int)  # 获取聚类中心（主色）
+    return colors
+
 def relative_luminance(rgb):
     """ Computes the relative luminance of an RGB color (0-255 scale) """
     def channel_luminance(c):
@@ -21,20 +32,29 @@ def contrast_ratio(color1, color2):
     L1, L2 = max(lum1, lum2), min(lum1, lum2)
     return (L1 + 0.05) / (L2 + 0.05)
 
-def get_contrast_score(colors, background=(255, 255, 255)):
-    """ Computes contrast score using WCAG guidelines """
-    scores = []
-    for color in colors:
-        ratio = contrast_ratio(color, background)
-        if ratio >= 7:
-            scores.append(10)
-        elif ratio >= 4.5:
-            scores.append(7)
-        elif ratio >= 3:
-            scores.append(4)
-        else:
-            scores.append(0)
-    return np.mean(scores) * 4  # Weighted 40%
+def get_contrast_score(colors):
+    """ 计算图表内所有主要颜色之间的对比度 """
+    contrast_values = []
+
+    for i in range(len(colors)):
+        for j in range(i + 1, len(colors)):  # 计算所有颜色组合的对比度
+            ratio = contrast_ratio(colors[i], colors[j])
+            contrast_values.append(ratio)
+
+    if not contrast_values:
+        return 0  # 避免空列表错误
+
+    avg_contrast = np.mean(contrast_values)  # 计算所有对比度的平均值
+
+    # WCAG 标准评分
+    if avg_contrast >= 7:
+        return 10
+    elif avg_contrast >= 4.5:
+        return 7
+    elif avg_contrast >= 3:
+        return 4
+    else:
+        return 2  # 不设为 0，避免过度惩罚亮色
 
 def extract_dominant_colors(image_path, k=5):
     """ Extracts the k most dominant colors from an image using k-means clustering """
@@ -70,19 +90,34 @@ def simulate_color_blindness(image_path, deficiency='deuteranopia'):
     return simulated_image
 
 def get_color_blindness_score(image_path):
-    """ Checks if the graph remains distinguishable under color blindness """
+    """ 直接评估色盲用户是否能区分颜色，而不是和原图比 """
     image = cv2.imread(image_path)
-    simulated = simulate_color_blindness(image_path, 'deuteranopia')  # Options: 'deuteranopia', 'protanopia', 'tritanopia'
+    simulated = simulate_color_blindness(image_path, 'deuteranopia')
 
-    diff = np.abs(image.astype(float) - simulated.astype(float)).mean()
-    if diff > 40:
+    # 提取色盲模拟图像的主色调
+    colors = extract_dominant_colors_from_image(simulated, k=5)  # 提取 5 种主色
+    color_distances = []
+
+    # 计算所有颜色之间的欧几里得距离，判断它们的区分度
+    for i in range(len(colors)):
+        for j in range(i + 1, len(colors)):
+            dist = np.linalg.norm(colors[i] - colors[j])  # 计算颜色向量之间的距离
+            color_distances.append(dist)
+
+    # 计算颜色差异的平均值
+    mean_distance = np.mean(color_distances) if color_distances else 0
+
+    # 根据颜色差异分配评分
+    if mean_distance > 100:  # 颜色明显不同
         return 10
-    elif diff > 30:
-        return 7
-    elif diff > 20:
+    elif mean_distance > 75:
+        return 8
+    elif mean_distance > 50:
+        return 6
+    elif mean_distance > 30:
         return 4
     else:
-        return 0  # Poor differentiation
+        return 2  # 颜色几乎相同，难以区分
 
 def get_grayscale_score(image_path):
     """ Evaluates how distinguishable a graph is in grayscale """
@@ -118,15 +153,16 @@ def evaluate_graph(image_path):
     """ Computes the final accessibility score of the PNG graph """
     colors = extract_dominant_colors(image_path)
 
-    contrast_score = get_contrast_score(colors)
+    contrast_score = get_contrast_score(colors) * 4
     cb_score = get_color_blindness_score(image_path) * 3  # 30% weight
     grayscale_score = get_grayscale_score(image_path) * 2  # 20% weight
     pattern_score = detect_patterns(image_path)  # 10% weight
+    print(contrast_score, cb_score, grayscale_score, pattern_score)
 
     total_score = contrast_score + cb_score + grayscale_score + pattern_score
     return round(total_score, 2)
 
 if __name__ == '__main__':
-    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png"  # Replace with the actual path to your PNG graph
+    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/hatched_bars.png"
     score = evaluate_graph(image_path)
     print(f"📊 Graph Accessibility Score: {score}/100")
