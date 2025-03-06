@@ -143,11 +143,11 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         avg_color = np.mean(roi_hsv.reshape(-1, 3), axis=0)
         bar_colors.append(avg_color)
     bar_colors = np.array(bar_colors)
-    print(bar_colors)
+    # print(bar_colors)
 
     dbscan = DBSCAN(eps=10, min_samples=2, metric=lambda a, b: euclidean(a, b))
     labels = dbscan.fit_predict(bar_colors)
-    print(labels)
+    # print(labels)
     
     group_bars = {}
     for i, label in enumerate(labels):
@@ -164,7 +164,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         cluster_colors = bar_colors[labels == label]
         avg_color = np.mean(cluster_colors, axis=0)
         color_map[label] = cv2.cvtColor(np.uint8([[avg_color]]), cv2.COLOR_HSV2RGB)[0][0]
-    print(color_map)
+    # print(color_map)
     
     # # visualize the grouped bars
     # for group, bar_list in group_bars.items():
@@ -283,9 +283,12 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     output_path = os.path.join(output_folder, file_name_without_ext+'_hatched_bars.png')
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
 
+    return color_map
+
 if __name__ == '__main__':
     # Usage
-    add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
-                        '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
-    add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
+    # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
+    #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
+    color_map = add_hatches_to_bars('./Prototype/backend/Algorithm/barplot_raw.png', 
                         './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
+    print(color_map)
