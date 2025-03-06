@@ -6,7 +6,14 @@ import InactiveGenerateBtn from './InactiveGenerateBtn.vue'
 import GenerateBtn from './GenerateBtn.vue'
 
 const imageToken = ref(null);
+const selectedColorBlindType = ref('normal');
 const emit = defineEmits(["result-fetched-parent"]);
+
+// receive selected color type from ColorBlindnessSelector
+const handleColorUpdate = (colorBlindType) => {
+  selectedColorBlindType.value = colorBlindType;
+  console.log('[UserInput]updated color type '+ colorBlindType);
+};
 
 // receive token from Uploader
 const handleImageToken = (token) => {
@@ -28,8 +35,8 @@ const handleResultFetched = (result) => {
 <template>
     <div>
         <div class="uploader"><Uploader @image-uploaded="handleImageToken"/></div>
-        <div class="color-blindness-selector"><ColorBlindnessSelector /></div>
-        <div v-if="imageToken" class="generate-btn"><GenerateBtn :token="imageToken" @result-fetched="handleResultFetched"/></div>
+        <div class="color-blindness-selector"><ColorBlindnessSelector @update-selected="handleColorUpdate"/></div>
+        <div v-if="imageToken" class="generate-btn"><GenerateBtn :token="imageToken" :color="selectedColorBlindType" @result-fetched="handleResultFetched"/></div>
         <div v-if="!imageToken" class="generate-btn"><InactiveGenerateBtn /></div>
     </div>
 </template>

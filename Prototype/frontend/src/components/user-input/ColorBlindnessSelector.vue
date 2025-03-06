@@ -1,9 +1,12 @@
 <script setup>
 import ColorBlindnessOption from './ColorBlindnessOption.vue'
-import { ref } from 'vue';
-const selectedType = ref('default');
+import { ref, defineEmits } from 'vue';
+const selectedType = ref('normal');
+const emit = defineEmits(['update-selected']);
 const handleSelection = (type) => {
   selectedType.value = type;
+  console.log('[ColorblindnessSelector]: updated color type', type);
+  emit('update-selected', type); // Emit event to the parent
 };
 </script>
 
@@ -12,7 +15,7 @@ const handleSelection = (type) => {
         Choose the type of color blindness:
     </div>
     <div>
-        <ColorBlindnessOption type="default" :selectedType="selectedType" @select="handleSelection"/>
+        <ColorBlindnessOption type="normal" :selectedType="selectedType" @select="handleSelection"/>
         <ColorBlindnessOption type="prot" :selectedType="selectedType" @select="handleSelection"/>
         <ColorBlindnessOption type="deut" :selectedType="selectedType" @select="handleSelection"/>
         <ColorBlindnessOption type="trit" :selectedType="selectedType" @select="handleSelection"/>

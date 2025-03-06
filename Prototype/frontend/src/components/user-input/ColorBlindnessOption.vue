@@ -15,7 +15,7 @@
   </template>
   
 <script setup>
-  import { computed } from 'vue';
+  import { computed, defineEmits} from 'vue';
   
   const props = defineProps({
     type: String,
@@ -29,7 +29,7 @@
   
   const optionTitle = computed(() => {
     switch (props.type) {
-      case 'default':
+      case 'normal':
         return 'Default';
       case 'prot':
         return 'Red Color Blindness';
@@ -44,7 +44,7 @@
 
   const optionSubtitle = computed(() => {
     switch (props.type) {
-      case 'default':
+      case 'normal':
         return 'Generally accessible to most people';
       case 'prot':
         return 'Protanopia / Protanomaly';
