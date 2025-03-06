@@ -1,0 +1,35 @@
+--- /Users/XiaojieZhou/opt/anaconda3/envs/CS239-Visual-Accessibility/lib/python3.12/site-packages/colormath/color_diff.py.bak	2025-03-05 18:12:50
++++ /Users/XiaojieZhou/opt/anaconda3/envs/CS239-Visual-Accessibility/lib/python3.12/site-packages/colormath/color_diff.py	2025-03-05 18:13:23
+@@ -42,7 +42,7 @@
+     color1_vector = _get_lab_color1_vector(color1)
+     color2_matrix = _get_lab_color2_matrix(color2)
+     delta_e = color_diff_matrix.delta_e_cie1976(color1_vector, color2_matrix)[0]
+-    return numpy.asscalar(delta_e)
++    return float(delta_e)
+ 
+ 
+ # noinspection PyPep8Naming
+@@ -64,7 +64,7 @@
+     color2_matrix = _get_lab_color2_matrix(color2)
+     delta_e = color_diff_matrix.delta_e_cie1994(
+         color1_vector, color2_matrix, K_L=K_L, K_C=K_C, K_H=K_H, K_1=K_1, K_2=K_2)[0]
+-    return numpy.asscalar(delta_e)
++    return float(delta_e)
+ 
+ 
+ # noinspection PyPep8Naming
+@@ -76,7 +76,7 @@
+     color2_matrix = _get_lab_color2_matrix(color2)
+     delta_e = color_diff_matrix.delta_e_cie2000(
+         color1_vector, color2_matrix, Kl=Kl, Kc=Kc, Kh=Kh)[0]
+-    return numpy.asscalar(delta_e)
++    return float(delta_e)
+ 
+ 
+ # noinspection PyPep8Naming
+@@ -92,4 +92,4 @@
+     color2_matrix = _get_lab_color2_matrix(color2)
+     delta_e = color_diff_matrix.delta_e_cmc(
+         color1_vector, color2_matrix, pl=pl, pc=pc)[0]
+-    return numpy.asscalar(delta_e)
++    return float(delta_e)
