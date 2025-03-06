@@ -13,22 +13,33 @@
   </template>
   
 <script setup>
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import axios from 'axios';
   
   // Props
   const props = defineProps({
-    token:  String
+    token:  String,
+    color: String
+  });
+  
+  // watch for color update
+  const currentColor = ref(props.color);
+  watch(() => props.color, (newColor) => {
+    console.log("[GenerateBtn] Color updated:", newColor);
+    currentColor.value = newColor;
   });
 
+  // no need to watch for token update
+  // because the generateBtn is only active each time a new image is uploaded by the user 
   console.log("[GenerateBtn] image token received from UserInputCol:"+props.token);
-  
+
   // Emits
   const emit = defineEmits(["result-fetched"]);
   
   // Reactive variables
   const loading = ref(false);
   const error = ref(null);
+  const uploadedImage = ref(null);
   
   // Function to fetch score and images
   const fetchData = async () => {
@@ -53,14 +64,17 @@
       const calculatedScore = 55;
       console.log("[GenerateBtn]: fetched score = "+calculatedScore);
 
-      // TODO: do not fetch images if score > 95
-    
-      // TODO: pass in color param
-      // // Fetch Images
-      // const imageResponse = await axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}`, {
-      //   responseType: "blob",
-      // });
-  
+      
+      // fetch result only if score < 95
+      if (calculatedScore < 95) {
+        const imageResponse = await axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}&color=${currentColor.value}`, {
+          responseType: "blob",
+        });
+        uploadedImage.value = URL.createObjectURL(imageResponse.data);
+      } else {
+        uploadedImage.value = null;
+      }
+      
       // Convert images to Object URLs
       // const imageURL = URL.createObjectURL(imageResponse.data);
   
@@ -68,7 +82,7 @@
       // Emit score and images
       emit("result-fetched", {
         score: calculatedScore,
-        newImageURL: '',
+        newImageURL: uploadedImage.value,
       });
     } catch (err) {
       error.value = err.message;

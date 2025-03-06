@@ -74,10 +74,9 @@ const uploadFile = async () => {
 
 const clearUpload = () => {
   uploadedImage.value = null;
-
   // emit null token when image is cleared
   imageToken.value = null;
-  emit("image-uploaded", null); 
+  emit("image-uploaded", imageToken.value); 
 };
 
 </script>

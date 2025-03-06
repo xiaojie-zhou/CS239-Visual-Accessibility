@@ -22,7 +22,7 @@
     </div>
     <div class="result-container">
       <NullState v-if="!fetchedScore" />
-      <Feedback  v-if="fetchedScore" :score="fetchedScore"/>
+      <Feedback  v-if="fetchedScore" :score="fetchedScore" :imageURL="newImageURL"/>
     </div>
   </div>
 </template>
