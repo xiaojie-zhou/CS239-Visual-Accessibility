@@ -55,15 +55,15 @@
   });
   const rating = computed(() => {
     if (props.score >= 95) {
-      return "Perfect";
-    } else if (props.score >= 80) {
       return "Excellent";
-    } else if (props.score >= 60) {
+    } else if (props.score >= 80) {
       return "Good";
-    } else if (props.score >= 40) {
+    } else if (props.score >= 60) {
       return "Moderate";
-    } else {
+    } else if (props.score >= 40) {
       return "Poor";
+    } else {
+      return "Very Poor";
     }
   
   });

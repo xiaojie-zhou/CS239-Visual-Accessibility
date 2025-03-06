@@ -5,6 +5,6 @@
 <template>
   <!-- TODO: do not display downloader if socre >= 95 -->
   <Downloader /> 
-  <Score score="94"/>
+  <Score score="95"/>
 
 </template>
