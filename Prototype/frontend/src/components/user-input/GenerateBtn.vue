@@ -2,13 +2,16 @@
     <button
       class="button"
       @click="fetchData">
-      <slot>
+      <div v-if="loading" class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+      <slot v-else>
         <p>
           Evaluate & Generate
         </p>
       </slot>
     </button>
-    <div v-if="loading">Loading...</div>
+    
     <div v-if="error" class="error">{{ error }}</div>
   </template>
 
@@ -56,15 +59,12 @@
   
     try {
       // Fetch Score
-      // TODO: fix the issue of infinite wait
-      // const scoreResponse = await axios.get(`http://127.0.0.1:5000/get-score?token=${props.token}`);
-      // const calculatedScore = scoreResponse.data.score;
-      const calculatedScore = 39;
+      const scoreResponse = await axios.get(`http://127.0.0.1:5000/get-score?token=${props.token}`);
+      const calculatedScore = scoreResponse.data.score;
       console.log("[GenerateBtn]: fetched score = "+calculatedScore);
 
-
-      // fetch result only if score < 95
-      if (calculatedScore < 95) {
+      // fetch result only if score < 90
+      if (calculatedScore < 90) {
         const [imageResponse, protResponse, deutResponse, tritResponse] = await Promise.all([
           axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}&color=${currentColor.value}`, {
             responseType: "blob",
@@ -100,17 +100,16 @@
       loading.value = false;
     }
   };
-  </script>
+</script>
 
-  <style scoped>
+
+<style scoped>
+
   .error {
     color: red;
     font-weight: bold;
   }
-  </style>
 
-
-  <style scoped>
   .button {
     padding: 20px 30px;
     font-size: 16px;
@@ -120,6 +119,11 @@
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 550px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .button:hover {
@@ -133,4 +137,19 @@
   p {
     font-size: 50px;
   }
-  </style>
+
+  .spinner {
+    border: 10px solid #66addd;
+    border-top: 10px solid white;
+
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
