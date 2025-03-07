@@ -1,22 +1,45 @@
+<script setup>
+  import {ref} from "vue";
+  const props = defineProps({
+    protImageURL: String,
+    deutImageURL: String,
+    tritImageURL: String
+  });
+  const isActive = ref(false);
+  const toggle = () => {
+    isActive.value = !isActive.value;
+  };
+</script>
+
 <template>
     <div class="button-container">
-      <button class="button" 
-        @click="toggle" 
-        :class="{ 'active': isActive }">
+      <button class="button"
+        @click="toggle" :class="{ active: isActive }">
         <img src="@/components/icons/glasses-black.svg" class="icon" alt="Simulation Icon" />
       </button>
-      <div v-if="isActive" class="tooltip">
-          <SimulationTooltip />
+
+      <!-- tooltip  -->
+      <div v-show="isActive" class="tooltip">
+        <div class="tooltip-title">
+          Color Blind Simulations of the Original Diagram
+        </div>
+        <div class="tooltip-content-container">
+          <div class="sim-container">
+          Red Color Blindness
+          <img class="sim-img" :src="props.protImageURL"/>
+          </div>
+          <div class="sim-container">
+            Green Color Blindness
+            <img class="sim-img" :src="props.deutImageURL"/>
+          </div>
+          <div class="sim-container">
+            Blue Color Blindness
+            <img class="sim-img" :src="props.tritImageURL"/>
+          </div>
+        </div>
       </div>
    </div>
-  </template>
-
-<script setup>
-  import SimulationTooltip from './SimulationTooltip.vue';
-  defineProps({ isActive: Boolean });
-  const emit = defineEmits(['toggle']);
-  const toggle = () => emit('toggle');
-</script>
+</template>
     
 <style scoped>
   .button-container {
@@ -39,6 +62,12 @@
     padding: 0;
   }
 
+  .button:hover {
+    background-color: #3498db;
+  }
+  .button:hover .icon {
+      filter: invert(100%) sepia(0%) saturate(0%) brightness(200%) contrast(100%);
+  }
   .button.active{
     background-color: #3498db;
   }
@@ -59,17 +88,42 @@
 
   .tooltip {
     position: absolute;
-    margin-top: 20px;
-    height: 100px;
-    width: 200px;
+    top: 100%; /* Position it directly below the button */
+    left: 50%;
     transform: translateX(-50%);
     background-color: #3498db;
     color: white;
     padding: 6px 12px;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 12px;
     white-space: nowrap;
-    opacity: 0.9;
-    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+    z-index: 10; /* Ensure it's above other elements */
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+  }
+
+  .tooltip-title {
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .tooltip-content-container {
+    display: flex;
+    flex-direction:row;
+  }
+
+  .sim-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    padding: 10px;
+    text-align: center;
+  }
+  .sim-img {
+    height: 300px;
   }
 </style>

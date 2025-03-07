@@ -6,7 +6,7 @@ from datetime import datetime
 from Algorithm.addPattern import add_hatches_to_bars
 import uuid
 from Algorithm.simulate_colorblind import simulate_colorblind
-from Algorithm.evaluateFigure import evaluate_graph
+from Algorithm.evaluateFigure import evaluate_image
 
 app = Flask(__name__)
 CORS(app)
@@ -144,7 +144,7 @@ def get_result():
     try:
         add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"], color_palette=color)
     except Exception as e:
-        return jsonify({"error": f"Failed to generate image: {str(e)}"}), 500
+        return jsonify({"error": f"Failed to generate image: {str(e)}"}), 200
 
     hatch = request.args.get("hatch")
     if hatch == "False":
@@ -198,10 +198,11 @@ def get_score():
     file_path = os.path.join(UPLOAD_FOLDER, file_store[token]+".png")
 
     try:
-        score = evaluate_graph(file_path)
+        score = evaluate_image(file_path)
         return jsonify({"score": score}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to evaluate graph: {str(e)}"}), 500
 
 
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

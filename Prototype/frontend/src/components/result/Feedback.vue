@@ -4,12 +4,20 @@
   import { defineProps} from 'vue';
   const props = defineProps({
     score: Number,
-    imageURL: String
+    imageURL: String,
+    protImageURL: String,
+    deutImageURL: String,
+    tritImageURL: String
   });
   console.log("[Feedback]: score="+props.score)
 </script>
 <template>
-  <!-- TODO: do not display downloader if score >= 95 -->
-    <Downloader :url="props.imageURL"/> 
+    <Downloader 
+      v-if="props.imageURL" 
+      :imageURL="props.imageURL" 
+      :protImageURL="protImageURL"
+      :deutImageURL="deutImageURL"
+      :tritImageURL="tritImageURL"
+    /> 
     <Score :score="props.score"/>
 </template>

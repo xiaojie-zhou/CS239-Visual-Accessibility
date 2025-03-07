@@ -1,25 +1,22 @@
 <script setup>
   import DownloadBtn from './DownloadBtn.vue'
   import SimulationBtn from './SimulationBtn.vue'
-  import InfoBtn from './InfoBtn.vue'
-  import { ref } from 'vue';
-  const activeTooltip = ref(null);
-  const toggleTooltip = (tooltip) => {
-    activeTooltip.value = activeTooltip.value === tooltip ? null : tooltip;
-  };
+  const props = defineProps({
+    imageURL: String,
+    protImageURL: String,
+    deutImageURL: String,
+    tritImageURL: String
+  });
 </script>
 
 <template>
 <div class="buttons">
     <SimulationBtn 
-        :isActive="activeTooltip === 'simulation'" 
-        @toggle="toggleTooltip('simulation')" 
+      :protImageURL="props.protImageURL"
+      :deutImageURL="props.deutImageURL"
+      :tritImageURL="props.tritImageURL"
     />
-    <InfoBtn 
-        :isActive="activeTooltip === 'info'" 
-        @toggle="toggleTooltip('info')" 
-    />
-    <DownloadBtn />
+    <DownloadBtn :imageURL="props.imageURL"/>
 </div>
 </template>
 

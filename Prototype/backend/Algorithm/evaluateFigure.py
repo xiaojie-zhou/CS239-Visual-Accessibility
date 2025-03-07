@@ -1,180 +1,94 @@
 import cv2
 import numpy as np
 from skimage.color import rgb2gray
-from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
 from daltonlens import simulate
 from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_conversions import convert_color
-from colormath.color_diff import delta_e_cie2000
+from concurrent.futures import ThreadPoolExecutor
 
 
-def extract_dominant_colors_from_image(image, k=5):
-    """ 使用 K-Means 聚类提取图像中的 k 个主要颜色 """
-    pixels = image.reshape(-1, 3)  # 重新调整形状，使其成为 RGB 值列表
+### 🚀 UTILITY FUNCTIONS ###
+def resize_image(image, max_size=512):
+    """Downscale image for faster processing while retaining visual features."""
+    h, w, _ = image.shape
+    scale = max_size / max(h, w)
+    return cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA) if scale < 1 else image
 
-    kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)  # K-Means 聚类
+
+def extract_dominant_colors(image, k=5):
+    """Extract k dominant colors using MiniBatchKMeans (fast)."""
+    image_resized = resize_image(image)
+    pixels = image_resized.reshape(-1, 3)
+
+    kmeans = MiniBatchKMeans(n_clusters=k, n_init=3, batch_size=500, random_state=42)
     kmeans.fit(pixels)
-
-    colors = kmeans.cluster_centers_.astype(int)  # 获取聚类中心（主色）
-    return colors
-
-def relative_luminance(rgb):
-    """ Computes the relative luminance of an RGB color (0-255 scale) """
-    def channel_luminance(c):
-        c = c / 255.0
-        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
-
-    r, g, b = rgb
-    return 0.2126 * channel_luminance(r) + 0.7152 * channel_luminance(g) + 0.0722 * channel_luminance(b)
-
-def contrast_ratio(color1, color2):
-    """ Computes contrast ratio between two colors based on WCAG 2.1 """
-    lum1 = relative_luminance(color1)
-    lum2 = relative_luminance(color2)
-
-    L1, L2 = max(lum1, lum2), min(lum1, lum2)
-    return (L1 + 0.05) / (L2 + 0.05)
-
-def get_contrast_score(colors):
-    """ 计算图表内所有主要颜色之间的对比度 """
-    contrast_values = []
-
-    for i in range(len(colors)):
-        for j in range(i + 1, len(colors)):  # 计算所有颜色组合的对比度
-            ratio = contrast_ratio(colors[i], colors[j])
-            contrast_values.append(ratio)
-
-    if not contrast_values:
-        return 0  # 避免空列表错误
-
-    avg_contrast = np.mean(contrast_values)  # 计算所有对比度的平均值
-
-    # WCAG 标准评分
-    if avg_contrast >= 7:
-        return 10
-    elif avg_contrast >= 4.5:
-        return 7
-    elif avg_contrast >= 3:
-        return 4
-    else:
-        return 2  # 不设为 0，避免过度惩罚亮色
-
-def extract_dominant_colors(image_path, k=5):
-    """ Extracts the k most dominant colors from an image using k-means clustering """
-    image = cv2.imread(image_path)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert to RGB
-    pixels = image.reshape(-1, 3)
-
-    kmeans = KMeans(n_clusters=k, n_init=10)
-    kmeans.fit(pixels)
-    colors = kmeans.cluster_centers_.astype(int)
-
-    return colors
+    return kmeans.cluster_centers_.astype(int)
 
 
-def simulate_color_blindness(image_path, deficiency='deuteranopia'):
-    """ Uses daltonlens to simulate color blindness """
-    image = cv2.imread(image_path)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert to RGB
-
-    # Map deficiency string to daltonlens Deficiency
-    deficiency_mapping = {
-        'protanopia': simulate.Deficiency.PROTAN,
-        'deuteranopia': simulate.Deficiency.DEUTAN,
-        'tritanopia': simulate.Deficiency.TRITAN
-    }
-    deficiency_type = deficiency_mapping.get(deficiency.lower(), simulate.Deficiency.DEUTAN)
-
-    # Create a simulator instance (e.g., using Viénot 1999 algorithm)
+### 🚀 1️⃣ COLOR BLIND SIMULATION & SCORE ###
+def simulate_color_blindness(image):
+    """Simulate color blindness (deuteranopia)."""
     simulator = simulate.Simulator_Vienot1999()
-
-    # Apply the simulator to the input image
-    simulated_image = simulator.simulate_cvd(image, deficiency=deficiency_type, severity=1.0)
-    return simulated_image
+    return simulator.simulate_cvd(resize_image(image, max_size=200), deficiency=simulate.Deficiency.DEUTAN, severity=1.0)
 
 
-def get_color_blindness_score(image_path):
-    """ 计算色盲用户是否能区分颜色，使用 CIEDE2000 计算颜色感知差异 """
+def get_color_blindness_score(image, colors):
+    """Measure color distinction after color blindness simulation."""
+    simulated = simulate_color_blindness(image)
+    cb_colors = extract_dominant_colors(simulated, k=len(colors))
+
+    # Convert to LAB space (faster calculations)
+    lab_colors = np.array([convert_color(sRGBColor(*c / 255.0), LabColor) for c in cb_colors])
+    lab_values = np.array([[c.lab_l, c.lab_a, c.lab_b] for c in lab_colors])
+
+    # Compute distances in LAB space
+    color_diffs = np.linalg.norm(lab_values[:, None] - lab_values, axis=-1)
+    mean_distance = np.mean(color_diffs[np.triu_indices(len(colors), 1)])
+
+    return 10 if mean_distance > 50 else 8 if mean_distance > 35 else 6 if mean_distance > 20 else 4 if mean_distance > 10 else 2
+
+
+### 🚀 2️⃣ GRAYSCALE READABILITY SCORE ###
+def get_grayscale_score(gray_image):
+    """Measure grayscale contrast (higher = better readability)."""
+    contrast = gray_image.std()
+    return 10 if contrast > 50 else 7 if contrast > 30 else 4 if contrast > 15 else 0
+
+
+### 🚀 3️⃣ PATTERN DETECTION SCORE ###
+def detect_patterns(image):
+    """Detects patterns using edge detection."""
+    edges = cv2.Canny(image, 50, 150)
+    edge_density = np.sum(edges > 0) / edges.size
+    return 10 if edge_density > 0.1 else 7 if edge_density > 0.05 else 4 if edge_density > 0.02 else 0
+
+
+### 🚀 4️⃣ FINAL ACCESSIBILITY SCORE (WITHOUT CONTRAST) ###
+def evaluate_image(image_path):
+    """Compute final accessibility score of a chart/graph (No contrast score)."""
     image = cv2.imread(image_path)
-    simulated = simulate_color_blindness(image_path, 'deuteranopia')  # 仅测红绿色盲
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert to RGB once
+    gray_image = rgb2gray(image_rgb) * 255  # Convert to grayscale once
 
-    # 提取色盲模拟图像的主色调
-    colors = extract_dominant_colors_from_image(simulated, k=5)
-    color_distances = []
+    colors = extract_dominant_colors(image_rgb)
 
-    # 计算所有颜色之间的 CIEDE2000 颜色感知差异
-    for i in range(len(colors)):
-        for j in range(i + 1, len(colors)):
-            color1_rgb = sRGBColor(*colors[i] / 255.0)
-            color2_rgb = sRGBColor(*colors[j] / 255.0)
+    # Parallelize tasks for speed
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        cb_future = executor.submit(get_color_blindness_score, image_rgb, colors)
+        grayscale_future = executor.submit(get_grayscale_score, gray_image)
+        pattern_future = executor.submit(detect_patterns, image)
 
-            # 转换为 Lab 颜色空间
-            color1_lab = convert_color(color1_rgb, LabColor)
-            color2_lab = convert_color(color2_rgb, LabColor)
+        cb_score = cb_future.result() * 4
+        grayscale_score = grayscale_future.result() * 4
+        pattern_score = pattern_future.result() * 2
 
-            # 计算 CIEDE2000 差异
-            dist = float(delta_e_cie2000(color1_lab, color2_lab))
-            color_distances.append(dist)
-
-    # 计算颜色差异的平均值
-    mean_distance = np.mean(color_distances) if color_distances else 0
-
-    # 根据颜色差异分配评分（调整后）
-    if mean_distance > 50:  # CIEDE2000 > 50 代表颜色明显不同
-        return 10
-    elif mean_distance > 35:
-        return 8
-    elif mean_distance > 20:
-        return 6
-    elif mean_distance > 10:
-        return 4
-    else:
-        return 2  # 颜色几乎相同，难以区分
-
-def get_grayscale_score(image_path):
-    """ Evaluates how distinguishable a graph is in grayscale """
-    image = cv2.imread(image_path)
-    gray = rgb2gray(image) * 255  # Convert to grayscale
-
-    contrast = gray.std()  # Standard deviation measures contrast in grayscale
-    if contrast > 50:
-        return 10
-    elif contrast > 30:
-        return 7
-    elif contrast > 15:
-        return 4
-    else:
-        return 0  # Poor grayscale readability
-
-def detect_patterns(image_path):
-    """ Tries to detect if patterns, markers, or varied line styles are used """
-    image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-    edges = cv2.Canny(image, 100, 200)  # Detect edges
-
-    edge_density = np.sum(edges > 0) / edges.size  # Measure pattern complexity
-    if edge_density > 0.1:
-        return 10  # Likely patterns exist
-    elif edge_density > 0.05:
-        return 7
-    elif edge_density > 0.02:
-        return 4
-    else:
-        return 0  # Likely just solid colors
-
-def evaluate_graph(image_path):
-    """ Computes the final accessibility score of the PNG graph """
-    colors = extract_dominant_colors(image_path)
-
-    contrast_score = get_contrast_score(colors) * 4
-    cb_score = get_color_blindness_score(image_path) * 3  # 30% weight
-    grayscale_score = get_grayscale_score(image_path) * 2  # 20% weight
-    pattern_score = detect_patterns(image_path)  # 10% weight
-    print(contrast_score, cb_score, grayscale_score, pattern_score)
-
-    total_score = contrast_score + cb_score + grayscale_score + pattern_score
+    total_score = cb_score + grayscale_score + pattern_score
     return round(total_score, 2)
 
+
+### 🚀 RUN IMAGE EVALUATION ###
 if __name__ == '__main__':
-    image_path = "Prototype/backend/Algorithm/hatched_bars.png"
-    score = evaluate_graph(image_path)
-    print(f"📊 Graph Accessibility Score: {score}/100")
+    image_path = "/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/test/barplot_raw.png"
+    score = evaluate_image(image_path)
+    print(f"📊 Image Accessibility Score: {score}/100")

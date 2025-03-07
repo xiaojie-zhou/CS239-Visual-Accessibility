@@ -4,8 +4,9 @@
         <div class="circle" :class="{ selected: isSelected }"></div>
       </div>
       <div class="option-text">
-        <div class="option-title">{{ optionTitle }} 
-          <a v-if="type" :href="hlink" target="_blank">
+        <div class="option-title">
+          {{ optionTitle }} 
+          <a v-if="showLink" :href="hlink" target="_blank">
             <img src="../icons/external-link.svg" alt="Learn More"/>
           </a>
         </div>
@@ -22,6 +23,7 @@
     selectedType: String,
   });
   const isSelected = computed(() => props.selectedType === props.type);
+  const showLink = computed(() => props.type !== "normal");
   const emit = defineEmits(["select"]);
   const toggleSelect = () => { // notify parent when clicked
     emit("select", props.type); 

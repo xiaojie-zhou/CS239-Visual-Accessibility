@@ -1,14 +1,22 @@
 <template>
     <button 
       class="button" 
-      @click="handleClick">
+      @click="downloadImage">
       <img src="@/components/icons/download-black-edited.svg" class="icon" alt="Download Icon" />
     </button>
 </template>
   
 <script setup>
-    const handleClick = () => { // TODO
-        console.log("Download btn clicked")
+    const props = defineProps({
+        imageURL: String,
+    }); 
+    const downloadImage = () => {
+        const link = document.createElement('a');
+        link.href = props.imageURL;
+        link.download = 'downloaded-image.jpg'; // Specify the name of the downloaded file
+        document.body.appendChild(link); // Append link to the document
+        link.click(); // Simulate a click to trigger download
+        document.body.removeChild(link); // Remove the link from the document
     };
 </script>
 

@@ -2,19 +2,27 @@
   import Buttons from './Buttons.vue';
   import { defineProps} from 'vue';
   const props = defineProps({
-    url: String
+    imageURL: String,
+    protImageURL: String,
+    deutImageURL: String,
+    tritImageURL: String
   });
 </script>
 
 <template>
   <div class="feedback-container">
     <div class="new-diagram">
-      <img :src="props.url" alt="Uploaded Image" />
+      <img :src="props.imageURL" alt="Uploaded Image" />
       <div class="buttons">
-        <Buttons />
+        <Buttons 
+          :imageURL="props.imageURL"
+          :protImageURL="props.protImageURL"
+          :deutImageURL="props.deutImageURL"
+          :tritImageURL="props.tritImageURL"
+        />
       </div>
     </div>
-  </div>  
+  </div> 
 </template>
 
 <style scoped>
@@ -33,7 +41,6 @@
     display: flex;
     justify-content: center;  
     align-items: center;    
-    overflow: hidden;  
   }
   .buttons {
     position: absolute;
