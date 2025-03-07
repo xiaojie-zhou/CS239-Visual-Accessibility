@@ -123,8 +123,8 @@ const clearUpload = () => {
 
 .clear-btn-container {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 20px;
+  right: 20px;
 }
 
 img {
