@@ -24,11 +24,16 @@ const handleImageToken = (token) => {
 // receive score and new image URL from GenerateBtn
 // then emit them to parent component
 const handleResultFetched = (result) => {
+    console.log("[UserInput]score received from GenerateBtn="+result.score);
+    console.log("[UserInput] newImageURL="+result.newImageURL);
+    console.log("[UserInput] protImageURL="+result.protImageURL);
     emit("result-fetched-parent", {
         score: result.score,
         newImageURL: result.newImageURL,
+        protImageURL: result.protImageURL,
+        deutImageURL: result.deutImageURL,
+        tritImageURL: result.tritImageURL,
     });
-    console.log("[UserInput]score received from GenerateBtn="+result.score);
 }
 </script>
 

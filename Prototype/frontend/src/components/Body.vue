@@ -6,11 +6,16 @@
   
   const fetchedScore = ref(null);
   const newImageURL = ref(null);
+  const protImageURL = ref(null);
+  const deutImageURL = ref(null);
+  const tritImageURL = ref(null);
 
   const handleResultFetchParent = (result) => {
     fetchedScore.value = result.score;
     newImageURL.value = result.newImageURL;
-    console.log("[Body]score received from UserInputCol="+result.score);
+    protImageURL.value = result.protImageURL;
+    deutImageURL.value = result.deutImageURL;
+    tritImageURL.value = result.tritImageURL;
   }
 </script>
 
@@ -22,7 +27,14 @@
     </div>
     <div class="result-container">
       <NullState v-if="!fetchedScore" />
-      <Feedback  v-if="fetchedScore" :score="fetchedScore" :imageURL="newImageURL"/>
+      <Feedback  
+        v-if="fetchedScore" 
+        :score="fetchedScore" 
+        :imageURL="newImageURL" 
+        :protImageURL="protImageURL"
+        :deutImageURL="deutImageURL"
+        :tritImageURL="tritImageURL"
+      />
     </div>
   </div>
 </template>

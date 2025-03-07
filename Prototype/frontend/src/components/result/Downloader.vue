@@ -2,19 +2,24 @@
   import Buttons from './Buttons.vue';
   import { defineProps} from 'vue';
   const props = defineProps({
-    url: String
+    imageURL: String,
+    protImageURL: String,
+    deutImageURL: String,
+    tritImageURL: String
   });
+  console.log("[Downloader] imageURL: "+props.imageURL);
+  console.log("[Downloader] protImageURL: "+props.protImageURL);
 </script>
 
 <template>
   <div class="feedback-container">
     <div class="new-diagram">
-      <img :src="props.url" alt="Uploaded Image" />
+      <img :src="props.imageURL" alt="Uploaded Image" />
       <div class="buttons">
         <Buttons />
       </div>
     </div>
-  </div>  
+  </div> 
 </template>
 
 <style scoped>

@@ -39,8 +39,11 @@
   // Reactive variables
   const loading = ref(false);
   const error = ref(null);
-  const uploadedImage = ref(null);
-
+  const generatedImage = ref(null);
+  const simuProtImage = ref(null);
+  const simuDeutImage = ref(null);
+  const simuTritImage = ref(null);
+  
   // Function to fetch score and images
   const fetchData = async () => {
     if (!props.token) {
@@ -50,39 +53,46 @@
 
     loading.value = true;
     error.value = null;
-
-
+  
     try {
       // Fetch Score
       // TODO: fix the issue of infinite wait
       // const scoreResponse = await axios.get(`http://127.0.0.1:5000/get-score?token=${props.token}`);
-      // if (!scoreResponse.ok) {
-      //   throw new Error("Failed to fetch score");
-      // }
       // const calculatedScore = scoreResponse.data.score;
-      const calculatedScore = 55;
-      // const calculatedScore = 95;
+      const calculatedScore = 39;
       console.log("[GenerateBtn]: fetched score = "+calculatedScore);
 
 
       // fetch result only if score < 95
       if (calculatedScore < 95) {
-        const imageResponse = await axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}&color=${currentColor.value}`, {
-          responseType: "blob",
-        });
-        uploadedImage.value = URL.createObjectURL(imageResponse.data);
+        const [imageResponse, protResponse, deutResponse, tritResponse] = await Promise.all([
+          axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}&color=${currentColor.value}`, {
+            responseType: "blob",
+          }),
+          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=prot`, {
+            responseType: "blob",
+          }),
+          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=deut`, {
+            responseType: "blob",
+          }),
+          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=trit`, {
+            responseType: "blob",
+          })
+        ]);
+        generatedImage.value = URL.createObjectURL(imageResponse.data);
+        simuProtImage.value = URL.createObjectURL(protResponse.data);
+        simuDeutImage.value = URL.createObjectURL(deutResponse.data);
+        simuTritImage.value = URL.createObjectURL(tritResponse.data);
       } else {
-        uploadedImage.value = null;
+        generatedImage.value, simuProtImage.value, simuDeutImage.value, simuTritImage.value = null;
       }
-
-      // Convert images to Object URLs
-      // const imageURL = URL.createObjectURL(imageResponse.data);
-
-
       // Emit score and images
       emit("result-fetched", {
         score: calculatedScore,
-        newImageURL: uploadedImage.value,
+        newImageURL: generatedImage.value,
+        protImageURL: simuProtImage.value,
+        deutImageURL: simuDeutImage.value,
+        tritImageURL: simuTritImage.value
       });
     } catch (err) {
       error.value = err.message;
