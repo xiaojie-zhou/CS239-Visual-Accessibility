@@ -1,15 +1,13 @@
 # Core assignment: Pilot + Evaluation Prep [+4.5] Group
-Phase: Evaluation
-Due date: Friday, March 7  at 11:59pm PT
-The goal of this stage of the project is to evaluate your high-fidelity prototype with potential users. 
-Course learning objectives this assignment facilitates: (1) Create an interactive system grounded in user research, iterative prototyping, and evaluation; (2) Explore and express complex problems, design choices; and (3) Reflect on what you know, don’t know, and how to learn what you don’t know. 
-Grading: This is a group assignment. All members of the group are expected to participate fully. Each group will receive one grade. / Every member will receive the same number of points.
-What to submit: Add a .MD file in your Github repo with the responses to the following questions. Submit the github repo link to BruinLearn. Only one person needs to submit for the group.
 
 Pilot [+1]
+
 [+0.5] Present the pilot user with a brief statement of the scenario and task. Ask the pilot user to complete the task. Note: You might feel (very) nervous that something will break. That is OK. It's ok for the pilot user to break things as they test out your system. Be prepared to restart/recover your system when things break. Note what happened step by step. Include 0.5-1p of notes on one pilot user. Additionally, summarize in a few sentences: What happened? Why? What changes do you need to make to your system before the next pilot?
+
 [+0.5] Involve another pilot user outside of the course. Include 0.5-1p of notes on this second pilot user. Summarize in a few sentences: What happened? Why? What changes do you need to make to your system before the next pilot?
+
 Before conducting an evaluation [+3]
+
 1. [+0.5] Articulate1-2 questions motivating the evaluation. In other words, what are the 1-2 things you want to prioritize learning through the evaluation?
 
 2. [+0.5] What metrics will you use to answer the above research questions? Why are these metrics appropriate? What are the benefits and drawbacks of using these metrics?
