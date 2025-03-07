@@ -144,7 +144,7 @@ def get_result():
     try:
         add_hatches_to_bars(file_path, app.config["OUTPUT_FOLDER"], color_palette=color)
     except Exception as e:
-        return jsonify({"error": f"Failed to generate image: {str(e)}"}), 500
+        return jsonify({"error": f"Failed to generate image: {str(e)}"}), 200
 
     hatch = request.args.get("hatch")
     if hatch == "False":
