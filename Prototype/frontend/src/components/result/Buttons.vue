@@ -2,6 +2,7 @@
   import DownloadBtn from './DownloadBtn.vue'
   import SimulationBtn from './SimulationBtn.vue'
   const props = defineProps({
+    imageURL: String,
     protImageURL: String,
     deutImageURL: String,
     tritImageURL: String
@@ -15,7 +16,7 @@
       :deutImageURL="props.deutImageURL"
       :tritImageURL="props.tritImageURL"
     />
-    <DownloadBtn />
+    <DownloadBtn :imageURL="props.imageURL"/>
 </div>
 </template>
 

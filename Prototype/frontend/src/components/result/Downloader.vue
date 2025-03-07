@@ -7,8 +7,6 @@
     deutImageURL: String,
     tritImageURL: String
   });
-  console.log("[Downloader] imageURL: "+props.imageURL);
-  console.log("[Downloader] protImageURL: "+props.protImageURL);
 </script>
 
 <template>
@@ -17,6 +15,7 @@
       <img :src="props.imageURL" alt="Uploaded Image" />
       <div class="buttons">
         <Buttons 
+          :imageURL="props.imageURL"
           :protImageURL="props.protImageURL"
           :deutImageURL="props.deutImageURL"
           :tritImageURL="props.tritImageURL"
