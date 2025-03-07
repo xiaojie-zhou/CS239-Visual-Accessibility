@@ -1,5 +1,6 @@
 # library
 import matplotlib.pyplot as plt
+import numpy as np
 
 def generateRefBarPlot():
     # Create bars
@@ -46,6 +47,35 @@ def generateRefBarPlot():
     plt.savefig('./Prototype/backend/Algorithm/examples/barplot_dpi200.png', dpi=200)
     plt.show()
 
+def generateRefBarPlot_2Groups():
+    # Sample data
+    categories = ['A', 'B', 'C', 'D', 'E']
+    values_group1 = [10, 23, 15, 30, 18]
+    values_group2 = [12, 18, 20, 25, 22]
+
+    # Define the width of the bars
+    bar_width = 0.4
+    x = np.arange(len(categories))  # The label locations
+
+    # Create the figure and axis
+    plt.figure(figsize=(8, 5))
+
+    # Plot bars for both groups
+    plt.bar(x - bar_width/2 - 0.01, values_group1, width=bar_width, label='Group 1')
+    plt.bar(x + bar_width/2 + 0.01, values_group2, width=bar_width, label='Group 2')
+
+    # Add labels and title
+    plt.xlabel('Categories')
+    plt.ylabel('Values')
+    plt.title('Bar Plot with Two Groups')
+    plt.xticks(x, categories)  # Set category labels on x-axis
+    plt.legend()
+
+    # Show the plot
+    plt.savefig('./Prototype/backend/Algorithm/examples/barplot_2groups_dpi200.png', dpi=200)
+    plt.show()
+
+
 def generateRefPieChart():    
     plt.rcParams["figure.figsize"] = (20,5)
     # create random data
@@ -60,5 +90,6 @@ def generateRefPieChart():
     plt.show()
 
 if __name__ == '__main__':
-    generateRefBarPlot()
+    # generateRefBarPlot()
+    generateRefBarPlot_2Groups()
     # generateRefPieChart()

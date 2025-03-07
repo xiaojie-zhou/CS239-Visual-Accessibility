@@ -54,8 +54,9 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     w += 10
     h += 10
 
-    x_left_margin, x_right_margin, y_top_margin, y_bottom_margin = 1,2,1,2
+    x_left_margin, x_right_margin, y_top_margin, y_bottom_margin = 0,0,0,0
     prev_avg_color = 0
+    start_boundary = False
     for x_ in range(x, x+w):
         color_point = [0, 0, 0]
         for y_ in range(y, y+h):
@@ -66,11 +67,14 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
             prev_avg_color = avg_color
             continue
         else:
-            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+            if not start_boundary and ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
+                start_boundary = True
+            if start_boundary and ((avg_color - prev_avg_color) / prev_avg_color * 100) > 20:
                 break
         prev_avg_color = avg_color
 
     prev_avg_color = 0
+    start_boundary = False
     for x_ in range(x+w-1, x, -1):
         color_point = [0, 0, 0]
         for y_ in range(y, y+h):
@@ -81,12 +85,15 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
             prev_avg_color = avg_color
             continue
         else:
-            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+            if not start_boundary and ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
+                start_boundary = True
+            if start_boundary and ((avg_color - prev_avg_color) / prev_avg_color * 100) > 20:
                 break
         prev_avg_color = avg_color
     print(x_left_margin, x_right_margin)
     
     prev_avg_color = 0
+    start_boundary = False
     for y_ in range(y, y+h):
         color_point = [0, 0, 0]
         for x_ in range(x, x+w):
@@ -97,11 +104,14 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
             prev_avg_color = avg_color
             continue
         else:
-            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+            if not start_boundary and ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
+                start_boundary = True
+            if start_boundary and ((avg_color - prev_avg_color) / prev_avg_color * 100) > 20:
                 break
         prev_avg_color = avg_color
 
     prev_avg_color = 0    
+    start_boundary = False
     for y_ in range(y+h-1, y, -1):
         color_point = [0, 0, 0]
         for x_ in range(x, x+w):
@@ -112,7 +122,9 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
             prev_avg_color = avg_color
             continue
         else:
-            if (prev_avg_color - avg_color) / prev_avg_color * 100 > 20:
+            if not start_boundary and ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
+                start_boundary = True
+            if start_boundary and ((avg_color - prev_avg_color) / prev_avg_color * 100) > 20:
                 break
         prev_avg_color = avg_color
 
@@ -156,12 +168,12 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # # DRAW ALL contours
-    # cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
-    # cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
-    # cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # DRAW ALL contours
+    cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
+    cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     # Filter and collect bars with coordinates in the original image space
     bars = []
@@ -275,7 +287,6 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         cluster_colors = bar_colors[labels == label]
         avg_color = np.mean(cluster_colors, axis=0)
         color_map[label] = cv2.cvtColor(np.uint8([[avg_color]]), cv2.COLOR_HSV2RGB)[0][0]
-    # print(color_map)
     
     # # visualize the grouped bars
     # for group, bar_list in group_bars.items():
@@ -320,13 +331,15 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         if change_color:
             bar_color = acadia_color_palette[i % len(acadia_color_palette)]
             bar_color = tuple(int(bar_color[i:i+2], 16) for i in (1, 3, 5))
+            color_map[group] = bar_color
             for (xb, yb, wb, hb) in bar_list:
                 cv2.rectangle(color_overlay, (xb, yb), (xb+wb, yb+hb), bar_color, -1)
     # Save the result with color adjustments
     result = color_overlay.copy()
     output_path = os.path.join(output_folder, file_name_without_ext+'_color_adjusted.png')
     cv2.imwrite(output_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
-
+    
+    print(color_map)
     if change_color:
         hatch_overlay = color_overlay.copy()
     else:
@@ -406,8 +419,8 @@ if __name__ == '__main__':
     # Usage
     # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
     #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
-    for dpi in [50, 100, 150, 200, 250, 300]:
-        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/barplot_dpi{dpi}_color_adjusted.png', 
+    for dpi in [200]:
+        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_2groups_dpi{dpi}.png', 
                             './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
     # color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/test/barplot_9_0.png',
     #                                 './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
