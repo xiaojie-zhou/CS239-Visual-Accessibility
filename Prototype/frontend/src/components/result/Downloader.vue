@@ -16,7 +16,11 @@
     <div class="new-diagram">
       <img :src="props.imageURL" alt="Uploaded Image" />
       <div class="buttons">
-        <Buttons />
+        <Buttons 
+          :protImageURL="props.protImageURL"
+          :deutImageURL="props.deutImageURL"
+          :tritImageURL="props.tritImageURL"
+        />
       </div>
     </div>
   </div> 
@@ -38,7 +42,6 @@
     display: flex;
     justify-content: center;  
     align-items: center;    
-    overflow: hidden;  
   }
   .buttons {
     position: absolute;
