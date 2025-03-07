@@ -16,7 +16,7 @@
               transform="rotate(-90 60 60)"
           />
         </svg>
-        <div class="score-number">{{ score }}</div>
+        <div class="score-number">{{ displayScore }}</div>
       </div>
     </div>
     <div class="rating-container">
@@ -29,18 +29,19 @@
 <script setup>
   import { defineProps, computed } from 'vue';
   const props = defineProps({
-    score: Number // TODO: display 100 when score>=95
+    score: Number
   });
-  console.log("[Score]: score="+props.score)
-
   const circumference = computed(() => 2 * Math.PI * 50); // r = 50
   const minScore = 0;
   const maxScore = 100;
   const strokeOffset = computed(() => {
       return circumference.value - ((props.score - minScore) / (maxScore - minScore)) * circumference.value;
   });
+  const displayScore = computed(() => { // display 100 for scores>= 90
+      return props.score >= 90 ? 100 :props.score;
+  });
   const color = computed(() => {
-    if (props.score >= 95) {
+    if (props.score >= 90) {
       return '#1e8449';
     } else if (props.score >= 80) {
       return'#2ecc71';
@@ -53,7 +54,7 @@
     }
   });
   const rating = computed(() => {
-    if (props.score >= 95) {
+    if (props.score >= 90) {
       return "Excellent";
     } else if (props.score >= 80) {
       return "Good";
@@ -67,7 +68,7 @@
   
   });
   const ratingString = computed(() => {
-    if (props.score >= 95) {
+    if (props.score >= 90) {
       return "No modification required. This graph is accessible!";
     } else if (props.score >= 80) {
       return "This graph is already highly accessible, and here is the new version with minor improvements.";
@@ -79,7 +80,6 @@
       return "Most users with color vision deficiency may find it hard to interpret this graph. Here's the enhanced version with significant improvements.";
     }
   });
-  console.log(color);
 </script>
 
 <style scoped>
