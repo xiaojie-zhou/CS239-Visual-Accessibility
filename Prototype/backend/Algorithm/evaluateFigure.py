@@ -80,8 +80,8 @@ def evaluate_image(image_path):
         pattern_future = executor.submit(detect_patterns, image)
 
         cb_score = cb_future.result() * 4
-        grayscale_score = grayscale_future.result() * 3
-        pattern_score = pattern_future.result() * 3
+        grayscale_score = grayscale_future.result() * 4
+        pattern_score = pattern_future.result() * 2
 
     total_score = cb_score + grayscale_score + pattern_score
     return round(total_score, 2)
