@@ -98,6 +98,7 @@ def get_preview():
     if token not in file_store:
         return jsonify({"error": "Invalid token"}), 400
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    simulate(token)
     if os.path.exists(file_path):
         return send_file(file_path), 200
     else:
@@ -158,6 +159,12 @@ def get_result():
         print(output_path)
         return jsonify({"error": "Image not generated. Should not happen."}), 500
 
+
+
+def simulate(token):
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
+
 @app.route("/get-simulation", methods=["GET"])
 def get_simulation():
     # require: ?token= & color=
@@ -172,9 +179,9 @@ def get_simulation():
         return jsonify({"error": "Invalid color"}), 400
 
     simulated_folder = app.config["SIMULATED_FOLDER"]
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], base_filename + ".png")
-
-    simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
+    # file_path = os.path.join(app.config["UPLOAD_FOLDER"], base_filename + ".png")
+    #
+    # simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
 
     # Paths of generated images
     simulated_images = {
@@ -183,9 +190,9 @@ def get_simulation():
         "trit": os.path.join(simulated_folder, f"{base_filename}_TRITAN.png"),
     }
     # Check if all simulated images exist
-    for key, path in simulated_images.items():
+    for color, path in simulated_images.items():
         if not os.path.exists(path):
-            return jsonify({"error": f"Simulation failed for {key}"}), 500
+            return jsonify({"error": f"Simulation failed for {color}"}), 500
 
     return send_file(simulated_images[color], mimetype="image/png"), 200
 
