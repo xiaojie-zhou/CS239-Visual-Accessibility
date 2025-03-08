@@ -165,6 +165,7 @@ def simulate(token):
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
     simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
 
+
 @app.route("/get-simulation", methods=["GET"])
 def get_simulation():
     # require: ?token= & color=
@@ -189,10 +190,10 @@ def get_simulation():
         "deut": os.path.join(simulated_folder, f"{base_filename}_DEUTAN.png"),
         "trit": os.path.join(simulated_folder, f"{base_filename}_TRITAN.png"),
     }
-    # Check if all simulated images exist
-    for color, path in simulated_images.items():
-        if not os.path.exists(path):
-            return jsonify({"error": f"Simulation failed for {color}"}), 500
+    # # Check if all simulated images exist
+    # for color, path in simulated_images.items():
+    #     if not os.path.exists(path):
+    #         return jsonify({"error": f"Simulation failed for {color}"}), 500
 
     return send_file(simulated_images[color], mimetype="image/png"), 200
 
