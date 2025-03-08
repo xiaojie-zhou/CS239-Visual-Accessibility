@@ -6,7 +6,7 @@ process for windows should be similar
 ## Backend
 Assuming python 3.12 is already installed
 
-Use virtual environment if you want to
+Use virtual environment
 ### Installation
 ```
 cd backend
