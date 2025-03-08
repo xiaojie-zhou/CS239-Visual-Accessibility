@@ -54,7 +54,9 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     w += 10
     h += 10
 
-    x_left_margin, x_right_margin, y_top_margin, y_bottom_margin = 0,0,0,0
+    x_left_margin, x_right_margin, y_top_margin, y_bottom_margin = 0,0,0,1
+    if width > 1000:
+        y_bottom_margin = 2
     prev_avg_color = 0
     start_boundary = False
     for x_ in range(x, x+w):
@@ -122,9 +124,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
             prev_avg_color = avg_color
             continue
         else:
-            if not start_boundary and ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
-                start_boundary = True
-            if start_boundary and ((avg_color - prev_avg_color) / prev_avg_color * 100) > 20:
+            if ((prev_avg_color - avg_color) / prev_avg_color * 100) > 20:
                 break
         prev_avg_color = avg_color
 
@@ -171,7 +171,7 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     # # DRAW ALL contours
     # cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
     # cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
-    # cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    # # cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
 
@@ -420,8 +420,8 @@ if __name__ == '__main__':
     # Usage
     # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
     #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
-    for dpi in [200]:
-        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_2groups_dpi{dpi}.png', 
+    for dpi in [50, 100, 150, 200, 250, 300]:
+        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_dpi{dpi}.png', 
                             './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
     # color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/test/barplot_9_0.png',
     #                                 './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
