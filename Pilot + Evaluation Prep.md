@@ -46,10 +46,13 @@ For fun [+0.5]
 
 [+0.5] Name your system!
 
+> *ColorSense*
+
 [+0.5] DEPTH: Design a logo for your system. Include a PNG in your repo. Add it to the README. 
+> ![ColorSense Logo](logo.jpg)
 
 Did you use a generative AI tool for this assignment? If so, which tool(s) and how?
-
+Yes, we used AI to grammar check our responses and rephrase.
 How much time did you spend on this assignment
 - as a group?
 About 2 hours
