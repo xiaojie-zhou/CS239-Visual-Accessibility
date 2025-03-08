@@ -168,12 +168,12 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
     
     # Find bar contours
     bar_contours, _ = cv2.findContours(cleaned, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # DRAW ALL contours
-    cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
-    cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
-    cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # # DRAW ALL contours
+    # cv2.drawContours(plot_area, bar_contours, -1, (0, 255, 0), 2)
+    # cv2.imshow('All Contours', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    # cv2.imwrite('contours.png', cv2.cvtColor(plot_area, cv2.COLOR_RGB2BGR))
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     # Filter and collect bars with coordinates in the original image space
     bars = []
@@ -187,10 +187,6 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         xb += x
         yb += y
         aspect_ratio = wb / float(hb)
-        if aspect_ratio > 1.5:  # most likely a legend
-            legends.append((xb, yb, wb, hb))
-            print("legend: ", wb, hb)
-            continue
         # detect bars based on color variance
         roi = original[yb:yb+hb, xb:xb+wb]
         hsv_roi = cv2.cvtColor(roi, cv2.COLOR_RGB2HSV)
@@ -198,9 +194,14 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         s_variance = np.var(hsv_roi[:, :, 1])
         v_variance = np.var(hsv_roi[:, :, 2])
         print(h_variance, s_variance, v_variance)
+
         if h_variance < 10 and s_variance < 10 and v_variance < 10:
             bars.append((xb, yb, wb, hb))
             bar_width = wb
+        else:
+            if aspect_ratio > 1.5:  # most likely a legend
+                legends.append((xb, yb, wb, hb))
+                continue
     print(legends)
     x_legend, y_legend, w_legend, h_legend = legends[0]
     print(w_legend, h_legend)

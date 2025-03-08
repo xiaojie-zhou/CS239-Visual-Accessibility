@@ -50,8 +50,10 @@ def generateRefBarPlot():
 def generateRefBarPlot_2Groups():
     # Sample data
     categories = ['A', 'B', 'C', 'D', 'E']
-    values_group1 = [10, 23, 15, 30, 18]
-    values_group2 = [12, 18, 20, 25, 22]
+    # randomly generate numbers within a range
+    random_numbers = np.random.randint(1, 30, size=(5, 2))
+    values_group1 = random_numbers[:, 0]
+    values_group2 = random_numbers[:, 1]
 
     # Define the width of the bars
     bar_width = 0.4
