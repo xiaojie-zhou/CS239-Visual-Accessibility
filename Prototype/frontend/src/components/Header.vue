@@ -1,6 +1,9 @@
 <template>
     <div class="header-container">
-      <h1 class="header">ColorSense: Enhancing Visual Clarity</h1>
+      <div class="title">
+        <img src="@/components/icons/logo.svg">
+        <div class="title-text">Color Vision Diagram Converter</div>
+      </div>
       <hr class="line" />
     </div>
   </template>
@@ -25,5 +28,17 @@
     background-color: #ccc;
     border: none;
     margin-bottom: 30px;
+  }
+
+  img {
+    height: 100px;
+  }
+
+  .title {
+    display: flex;
+    flex-direction: column;
+    font-size: 65px;
+    justify-content: baseline;
+    align-content: center;
   }
   </style>
