@@ -72,7 +72,7 @@ If necessary, ask follow-up questions based on their responses to clarify any in
 > *ColorSense*
 
 [+0.5] DEPTH: Design a logo for your system. Include a PNG in your repo. Add it to the README. 
-> ![ColorSense Logo](logo.jpg)
+> ![ColorSense Logo](../logo.jpg)
 
 Did you use a generative AI tool for this assignment? If so, which tool(s) and how?
 > Yes, we used ChatGPT to grammar check our responses and rephrase.
