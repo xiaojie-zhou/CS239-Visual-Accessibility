@@ -8,14 +8,16 @@ Assuming python 3.12 is already installed
 
 Use virtual environment
 ### Installation
+makefile is provided for easy installation:
+
+```make backend```
+or
 ```
 cd backend
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
-```
-### Running
-```
+
 flask --app app run
 ```
 
