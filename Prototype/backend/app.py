@@ -8,6 +8,7 @@ import uuid
 from Algorithm.simulate_colorblind import simulate_colorblind
 from Algorithm.evaluateFigure import evaluate_image
 import json
+from db import init_db, save_token, clear_tokens, get_filename_by_token
 
 app = Flask(__name__)
 CORS(app)
@@ -26,26 +27,6 @@ os.makedirs(SIMULATED_FOLDER, exist_ok=True)  # Ensure the folder exists
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 app.config["SIMULATED_FOLDER"] = SIMULATED_FOLDER
-
-# Store the uploaded file paths in file
-# {token: file_name}
-
-TOKEN_FILE = "tokens.json"
-
-def save_tokens():
-    """Save tokens to a file (persistent storage)"""
-    with open(TOKEN_FILE, "w") as f:
-        json.dump(file_store, f)
-
-def load_tokens():
-    """Load tokens from file if available"""
-    global file_store
-    if os.path.exists(TOKEN_FILE):
-        with open(TOKEN_FILE, "r") as f:
-            file_store.update(json.load(f))
-
-file_store = {}  # Memory dictionary
-load_tokens()  # Restore tokens from file
 
 @app.route("/")
 def hello_world():
@@ -85,8 +66,7 @@ def upload():
 
     if os.path.exists(file_path):
         token = uuid.uuid4().hex
-        file_store[token] = new_filename
-        save_tokens()
+        save_token(token, new_filename)
         return jsonify({"image": token}), 200
     else:
         return jsonify({"error": "Upload os path non-exist. Backend error."}), 500
@@ -113,9 +93,10 @@ def convert_to_png(image_path):
 @app.route("/get-preview", methods=["GET"])
 def get_preview():
     token = request.args.get("token")
-    if token not in file_store:
+    filename = get_filename_by_token(token)  # Query database instead of file_store
+    if not filename:
         return jsonify({"error": "Invalid token"}), 400
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename+".png")
     simulate(token)
     if os.path.exists(file_path):
         return send_file(file_path), 200
@@ -143,15 +124,16 @@ def clear():
         if file != ".gitignore":
             os.remove(file_path)
 
-    file_store.clear()
+    clear_tokens()
     return jsonify({"message": "All files cleared."}), 200
 
 @app.route("/get-result", methods=["GET"])
 def get_result():
     token = request.args.get("token")
-    if token not in file_store:
+    filename = get_filename_by_token(token)  # Query database
+    if not filename:
         return jsonify({"error": "Invalid token"}), 400
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename+".png")
 
     color = request.args.get("color")
     # ['default', 'prot', 'deut', 'trit', 'gray']
@@ -167,9 +149,9 @@ def get_result():
 
     hatch = request.args.get("hatch")
     if hatch == "False":
-        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token] + "_color_adjusted.png")
+        output_path = os.path.join(app.config["OUTPUT_FOLDER"], filename + "_color_adjusted.png")
     else:
-        output_path = os.path.join(app.config["OUTPUT_FOLDER"], file_store[token] + "_hatched_bars.png")
+        output_path = os.path.join(app.config["OUTPUT_FOLDER"], filename + "_hatched_bars.png")
 
     if os.path.exists(output_path):
         return send_file(output_path), 200
@@ -178,7 +160,8 @@ def get_result():
         return jsonify({"error": "Image not generated. Should not happen."}), 500
 
 def simulate(token):
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
+    filename = get_filename_by_token(token)  # Query database instead of file_store
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename+".png")
     simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
 
 @app.route("/get-simulation", methods=["GET"])
@@ -186,9 +169,10 @@ def get_simulation():
     # require: ?token= & color=
     # color: ['prot', 'deut', 'trit']
     token = request.args.get("token")
-    if token not in file_store:
+    base_filename = get_filename_by_token(token)  # Query only one token from DB
+
+    if not base_filename:
         return jsonify({"error": "Invalid token"}), 400
-    base_filename = file_store[token]
 
     color = request.args.get("color")
     if color not in ['prot', 'deut', 'trit']:
@@ -216,9 +200,11 @@ def get_simulation():
 def get_score():
     # require: ?token=
     token = request.args.get("token")
-    if token not in file_store:
+    base_filename = get_filename_by_token(token)  # Query only one token from DB
+
+    if not base_filename:
         return jsonify({"error": "Invalid token"}), 400
-    file_path = os.path.join(UPLOAD_FOLDER, file_store[token]+".png")
+    file_path = os.path.join(app.config["UPLOAD_FOLDER"], base_filename+".png")
 
     try:
         score = evaluate_image(file_path)
@@ -228,5 +214,6 @@ def get_score():
 
 
 if __name__ == "__main__":
+    init_db()  # Initialize database
     port = int(os.environ.get("PORT", 5000))  # Use Render's assigned port
     app.run(host="0.0.0.0", port=port)  # Bind to all network interfaces
