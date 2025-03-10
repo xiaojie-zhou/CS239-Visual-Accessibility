@@ -4,3 +4,4 @@
 *.pyc
 .vscode
 Prototype/frontend/.env
+Prototype/backend/tokens.db
