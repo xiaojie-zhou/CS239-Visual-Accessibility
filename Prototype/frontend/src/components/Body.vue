@@ -3,7 +3,7 @@
   import { ref } from 'vue'
   import Feedback from './result/Feedback.vue'
   import NullState from './result/NullState.vue'
-  
+
   const fetchedScore = ref(null);
   const newImageURL = ref(null);
   const protImageURL = ref(null);
@@ -27,10 +27,10 @@
     </div>
     <div class="result-container">
       <NullState v-if="!fetchedScore" />
-      <Feedback  
-        v-if="fetchedScore" 
-        :score="fetchedScore" 
-        :imageURL="newImageURL" 
+      <Feedback
+        v-if="fetchedScore"
+        :score="fetchedScore"
+        :imageURL="newImageURL"
         :protImageURL="protImageURL"
         :deutImageURL="deutImageURL"
         :tritImageURL="tritImageURL"
@@ -41,9 +41,9 @@
 
 <style scoped>
 .body-container {
-  display: flex; 
+  display: flex;
   flex-direction: row;
-  justify-content: center; 
+  justify-content: center;
   width: 100%;
   height: 100vh;
   margin-top: 30px;

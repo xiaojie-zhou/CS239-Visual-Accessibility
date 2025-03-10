@@ -7,6 +7,7 @@ from Algorithm.addPattern import add_hatches_to_bars
 import uuid
 from Algorithm.simulate_colorblind import simulate_colorblind
 from Algorithm.evaluateFigure import evaluate_image
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -26,9 +27,25 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["OUTPUT_FOLDER"] = OUTPUT_FOLDER
 app.config["SIMULATED_FOLDER"] = SIMULATED_FOLDER
 
-# Store the uploaded file paths in memory
+# Store the uploaded file paths in file
 # {token: file_name}
-file_store = {}
+
+TOKEN_FILE = "tokens.json"
+
+def save_tokens():
+    """Save tokens to a file (persistent storage)"""
+    with open(TOKEN_FILE, "w") as f:
+        json.dump(file_store, f)
+
+def load_tokens():
+    """Load tokens from file if available"""
+    global file_store
+    if os.path.exists(TOKEN_FILE):
+        with open(TOKEN_FILE, "r") as f:
+            file_store.update(json.load(f))
+
+file_store = {}  # Memory dictionary
+load_tokens()  # Restore tokens from file
 
 @app.route("/")
 def hello_world():
@@ -69,6 +86,7 @@ def upload():
     if os.path.exists(file_path):
         token = uuid.uuid4().hex
         file_store[token] = new_filename
+        save_tokens()
         return jsonify({"image": token}), 200
     else:
         return jsonify({"error": "Upload os path non-exist. Backend error."}), 500
@@ -159,12 +177,9 @@ def get_result():
         print(output_path)
         return jsonify({"error": "Image not generated. Should not happen."}), 500
 
-
-
 def simulate(token):
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
     simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
-
 
 @app.route("/get-simulation", methods=["GET"])
 def get_simulation():
