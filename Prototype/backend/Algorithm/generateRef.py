@@ -1,31 +1,30 @@
 # library
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 def generateRefBarPlot():
     # Create bars
-    barWidth = 0.9
-    bars1 = [3, 3, 1]
-    bars2 = [4, 2, 3]
-    bars3 = [4, 6, 7, 10, 4, 4]
-    bars4 = bars1 + bars2 + bars3
+    barWidth = 0.85
+
+    np.random.seed(int(time.time()))
+    bars1 = [6, 6, 2]
+    bars2 = [8, 4, 6]
+    bars3 = [2, 3, 3.5, 5, 2, 2]
+    bars4 = bars1 + bars2 + bars3  # for adding text
     
     # The X position of bars
-    r1 = [1,5,9]
-    r2 = [2,6,10]
+    r1 = [1+2,5+2,9+2]
+    r2 = [2+2,6+2,10+2]
     r3 = [3,4,7,8,11,12]
+    r3 = [x-2 for x in r3]
     r4 = r1 + r2 + r3
-    
-    # # Create barplot
-    # plt.bar(r1, bars1, width = barWidth, color = (0.3,0.1,0.4,0.6), label='Alone')
-    # plt.bar(r2, bars2, width = barWidth, color = (0.3,0.5,0.4,0.6), label='With Himself')
-    # plt.bar(r3, bars3, width = barWidth, color = (0.3,0.9,0.4,0.6), label='With other genotype')
 
+    # plt.figure(figsize=(10, 5))
     plt.bar(r1, bars1, width = barWidth, color = (0.55, 0, 0.0, 1), label='Alone')
     plt.bar(r2, bars2, width = barWidth, color = (0, 0.39, 0, 1), label='With Himself')
     plt.bar(r3, bars3, width = barWidth, color = (0.3,0.9,0.4, 1), label='With other genotype')
-    # Note: the barplot could be created easily. See the barplot section for other examples.
-    
+
     # Create legend
     plt.legend()
     
@@ -44,7 +43,7 @@ def generateRefBarPlot():
     
     # Show graphic
     # plt.tight_layout()
-    plt.savefig('./Prototype/backend/Algorithm/examples/barplot_dpi200.png', dpi=200)
+    plt.savefig('./Prototype/backend/Algorithm/examples/barplot_dpi100_width8.png', dpi=100)
     plt.show()
 
 def generateRefBarPlot_2Groups():
@@ -92,6 +91,6 @@ def generateRefPieChart():
     plt.show()
 
 if __name__ == '__main__':
-    # generateRefBarPlot()
-    generateRefBarPlot_2Groups()
+    generateRefBarPlot()
+    # generateRefBarPlot_2Groups()
     # generateRefPieChart()

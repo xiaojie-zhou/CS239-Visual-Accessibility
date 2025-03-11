@@ -245,8 +245,8 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         print(h_variance, s_variance, v_variance)
 
         if h_variance < 10 and s_variance < 10 and v_variance < 10:
+            legend_height = hb
             legend_bars.append((xb + small_bar_margin, yb + small_bar_margin, wb -2*small_bar_margin, hb -2*small_bar_margin))
-
 
     bars = bars + legend_bars
     # # plot the bars
@@ -316,10 +316,10 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
         thickness = 1
     else:
         thickness = 2
-    spacing = bar_width // 2
+    spacing = bar_width
     patterns = [
         {'type': 'horizontal', 'spacing': spacing //2, 'thickness': thickness},
-        {'type': 'vertical', 'spacing': spacing //2, 'thickness': thickness},
+        {'type': 'vertical', 'spacing': spacing //3, 'thickness': thickness},
         {'type': 'diagonal', 'spacing': spacing, 'thickness': thickness, 'slope': 1},
         {'type': 'cross', 'spacing': spacing, 'thickness': thickness},
         {'type': 'dots', 'spacing': spacing, 'radius': thickness}
@@ -355,10 +355,10 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
 
         for (xb, yb, wb, hb) in bar_list:
             if pattern['type'] == 'horizontal':
-                for y_line in range(yb, yb+hb+1, pattern['spacing']):
+                for y_line in range(yb+legend_height//2, yb+hb+1, pattern['spacing']):
                     cv2.line(hatch_overlay, (xb + 1, y_line), (xb+wb-1, y_line), color, pattern['thickness'])
             elif pattern['type'] == 'vertical':
-                for x_line in range(xb, xb+wb+1, pattern['spacing']):
+                for x_line in range(xb+legend_height//2, xb+wb+1, pattern['spacing']):
                     cv2.line(hatch_overlay, (x_line, yb+1), (x_line, yb+hb), color, pattern['thickness'])
             elif pattern['type'] == 'cross':
                 for y_line in range(yb, yb+hb, pattern['spacing']):
@@ -370,7 +370,9 @@ def add_hatches_to_bars(input_path, output_folder, hatch_alpha=0.3, change_color
                     for x_dot in range(xb, xb+wb, pattern['spacing']):
                         cv2.circle(hatch_overlay, (x_dot, y_dot), pattern['radius'], color, -1)
             elif pattern['type'] == 'diagonal':
-                step = pattern['spacing']
+                bar_width = wb
+                step = bar_width // 2
+                # step = pattern['spacing']
                 k = pattern['slope']
                 # Top-left to bottom-right diagonals
                 x_start = xb + wb - step
@@ -420,8 +422,8 @@ if __name__ == '__main__':
     # Usage
     # add_hatches_to_bars('/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/Algorithm/barplot_raw.png',
     #                     '/Users/XiaojieZhou/UCLA/CS239/CS239-Visual-Accessibility/Prototype/backend/simulation', hatch_alpha=0.5, change_color=True, color_palette='normal')
-    for dpi in [50, 100, 150, 200, 250, 300]:
-        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/barplot_dpi{dpi}.png', 
+    for dpi in [200]:
+        color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/examples/demo/barplot_2groups_dpi{dpi}.png', 
                             './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
     # color_map = add_hatches_to_bars(f'./Prototype/backend/Algorithm/test/barplot_9_0.png',
     #                                 './Prototype/backend/Algorithm/', hatch_alpha=0.5, change_color=True, color_palette='normal')
