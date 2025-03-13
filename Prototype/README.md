@@ -8,17 +8,23 @@ Assuming python 3.12 is already installed
 
 Use virtual environment
 ### Installation
-makefile is provided for easy installation:
 
-```make backend```
-or
-```
+
+```bash
 cd backend
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Before starting, make sure you are running the correct Flask environment. If you are using Conda, deactivate any active environments first:
+
+```bash
+  conda deactivate
+```
 
 # running
+```bash
 flask --app app run
 ```
 
