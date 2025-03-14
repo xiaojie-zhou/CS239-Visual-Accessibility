@@ -69,7 +69,7 @@ const uploadFile = async () => {
 
   } catch (error) {
     console.error("Upload error:", error);
-    alert("Upload error: "+error.response.data.error);
+    // alert("Upload error: "+error.response.data.error);
   }
 };
 
