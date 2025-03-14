@@ -65,19 +65,19 @@
     } else {
       return "Very Poor";
     }
-  
+
   });
   const ratingString = computed(() => {
     if (props.score >= 90) {
       return "No modification required. This graph is accessible!";
     } else if (props.score >= 80) {
-      return "This graph is already highly accessible, and here is the new version with minor improvements.";
+      return "The original graph is already highly accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 60) {
-      return "This graph is generally accessible, and here is the new version with minor improvements.";
+      return "The original graph is generally accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 40) {
-      return "Some users may struggle interpreting this graph. Here's the enhanced version.";
+      return "Some users may struggle interpreting the original graph. Here's the enhanced version.";
     } else {
-      return "Most users with color vision deficiency may find it hard to interpret this graph. Here's the enhanced version with significant improvements.";
+      return "Most users with color vision deficiency may find it hard to interpret the original graph. Here's the enhanced version with significant improvements.";
     }
   });
 </script>
@@ -124,4 +124,3 @@
   font-size: 30px;
 }
 </style>
-  
