@@ -34,11 +34,11 @@
   const circumference = computed(() => 2 * Math.PI * 50); // r = 50
   const minScore = 0;
   const maxScore = 100;
-  const strokeOffset = computed(() => {
-      return circumference.value - ((props.score - minScore) / (maxScore - minScore)) * circumference.value;
-  });
   const displayScore = computed(() => { // display 100 for scores>= 90
       return props.score >= 90 ? 100 :props.score;
+  });
+  const strokeOffset = computed(() => {
+      return circumference.value - ((displayScore - minScore) / (maxScore - minScore)) * circumference.value;
   });
   const color = computed(() => {
     if (props.score >= 90) {

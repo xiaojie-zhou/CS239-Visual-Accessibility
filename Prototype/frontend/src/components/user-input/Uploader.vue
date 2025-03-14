@@ -54,7 +54,7 @@ const uploadFile = async () => {
       alert("Upload failed. No token received.");
       return;
     }
-    alert("File uploaded successfully!");
+    // alert("File uploaded successfully!");
 
     // get the preview
     const imageResponse = await axios.get(`http://127.0.0.1:5000/get-preview?token=${response.data.image}`, {
