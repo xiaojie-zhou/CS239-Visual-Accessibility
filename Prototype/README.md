@@ -1,48 +1,53 @@
-# Get Started
-### Open two terminals for frontend and backend
-for macOS/linux
+# Try it out
+# Hosted and Deployed
+## 👉 [ColorSense](https://xiaojie-zhou.github.io/ColorSense/)
 
-process for windows should be similar 
+# Local Development 
+Open **two** terminals for backend and frontend
 ## Backend
 Assuming python 3.12 is already installed
 
 Use virtual environment
 ### Installation
 
-
-```bash
-cd backend
+```
+cd Prototype/backend
 python3.12 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Before starting, make sure you are running the correct Flask environment. If you are using Conda, deactivate any active environments first:
-
-```bash
-  conda deactivate
+### Running
 ```
-
-# running
-```bash
 flask --app app run
 ```
+Ideally, the backend should be running on http://localhost:5000 
+#### Unless error, skip to the frontend section to run the frontend.
 
-## Frontend
-Assuming [Node.js](https://nodejs.org/en) is installed
-
-cd into the frontend folder
-
-install packages and dependencies
-
+If there is an error, make sure you are using the venv environment by checking python and flask paths:
 ```
-cd frontend
+which python
+which flask
+which pip
+```
+The output should be the path to the .venv folder. 
+
+If it points to anaconda or system python/flask, you can activate the environment by running:
+```
+conda deactivate
+```
+## Frontend
+Assuming [Node.js](https://nodejs.org/en) is installed, also using virtual environment
+
+### Installation
+```
+cd Prototype/frontend
 python3.12 -m venv .venv
 . .venv/bin/activate
 npm install
 ```
 
-## Running
+### Running
 ```
 npm run dev
 ```
