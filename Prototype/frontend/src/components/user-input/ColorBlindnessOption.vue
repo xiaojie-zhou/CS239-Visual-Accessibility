@@ -117,8 +117,9 @@
     font-size: 30px;
   }
   .option-subtitle {
-    font-size: 25px;
+    font-size: 20px;
     color: gray;
+    font-style: italic;
   }
 
 </style>

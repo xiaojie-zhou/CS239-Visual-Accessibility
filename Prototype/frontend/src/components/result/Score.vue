@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
   <div class="score-rating-container">
     <div class="score-container">
       <div class="circle-container">
@@ -24,6 +25,10 @@
       <div class="text">{{ratingString}}</div>
     </div>
   </div>
+  <div class="hint-container">
+    <div class="hint">{{hint}}</div>
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -38,7 +43,7 @@
       return props.score >= 90 ? 100 :props.score;
   });
   const strokeOffset = computed(() => {
-      return circumference.value - ((displayScore - minScore) / (maxScore - minScore)) * circumference.value;
+      return circumference.value - ((displayScore.value - minScore) / (maxScore - minScore)) * circumference.value;
   });
   const color = computed(() => {
     if (props.score >= 90) {
@@ -71,15 +76,16 @@
     if (props.score >= 90) {
       return "No modification required. This graph is accessible!";
     } else if (props.score >= 80) {
-      return "This graph is already highly accessible, and here is the new version with minor improvements.";
+      return "The original graph is already highly accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 60) {
-      return "This graph is generally accessible, and here is the new version with minor improvements.";
+      return "The original graph is generally accessible, and here is the new version with minor improvements.";
     } else if (props.score >= 40) {
-      return "Some users may struggle interpreting this graph. Here's the enhanced version.";
+      return "Some users may struggle interpreting the original graph. Here's the enhanced version.";
     } else {
-      return "Most users with color vision deficiency may find it hard to interpret this graph. Here's the enhanced version with significant improvements.";
+      return "Most users with color vision deficiency may find it hard to interpret the original graph. Here's the enhanced version with significant improvements.";
     }
   });
+  const hint = "This is the accessibility score of the original diagram. This score is calculated based on color contrast, grayscale, and pattern richness.";
 </script>
 
 <style scoped>
@@ -123,5 +129,18 @@
 .text {
   font-size: 30px;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.hint {
+  font-size: 20px;
+  color: gray;
+  font-style: italic;
+}
+.hint-container {
+  margin-top: 10px;
+}
 </style>
-  
