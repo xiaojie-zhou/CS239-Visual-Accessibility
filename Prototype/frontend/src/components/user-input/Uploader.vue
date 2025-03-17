@@ -21,7 +21,8 @@
 import { ref, defineEmits } from "vue";
 import axios from "axios";
 import ClearUploadBtn from "./ClearUploadBtn.vue";
-import API_URL from "@/config.js"; // Import API URL
+import API_URL from "@/config.js";
+import * as Cronitor from "@cronitorio/cronitor-rum"; // Import API URL
 
 const file = ref(null);
 const uploadedImage = ref(null);
@@ -56,6 +57,7 @@ const uploadFile = async () => {
       return;
     }
     // alert("File uploaded successfully!");
+    Cronitor.track('Uploaded-Image');
 
     // get the preview
     const imageResponse = await axios.get(`${API_URL}/get-preview?token=${response.data.image}`, {

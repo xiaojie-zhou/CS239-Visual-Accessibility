@@ -18,7 +18,8 @@
 <script setup>
   import { ref, watch } from 'vue';
   import axios from 'axios';
-  import API_URL from "@/config.js"; // Import API URL
+  import API_URL from "@/config.js";
+  import * as Cronitor from "@cronitorio/cronitor-rum"; // Import API URL
 
   // Props
   const props = defineProps({
@@ -57,7 +58,7 @@
 
     loading.value = true;
     error.value = null;
-
+    Cronitor.track('generate-result');
     try {
       // Fetch Score
       const scoreResponse = await axios.get(`${API_URL}/get-score?token=${props.token}`);

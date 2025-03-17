@@ -1,15 +1,17 @@
 <template>
-    <button 
-      class="button" 
+    <button
+      class="button"
       @click="downloadImage">
       <img src="@/components/icons/download-black-edited.svg" class="icon" alt="Download Icon" />
     </button>
 </template>
-  
+
 <script setup>
+    import * as Cronitor from "@cronitorio/cronitor-rum";
+
     const props = defineProps({
         imageURL: String,
-    }); 
+    });
     const downloadImage = () => {
         const link = document.createElement('a');
         link.href = props.imageURL;
@@ -17,6 +19,7 @@
         document.body.appendChild(link); // Append link to the document
         link.click(); // Simulate a click to trigger download
         document.body.removeChild(link); // Remove the link from the document
+        Cronitor.track('download-image');
     };
 </script>
 

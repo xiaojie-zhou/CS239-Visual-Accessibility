@@ -1,5 +1,6 @@
 <script setup>
   import {ref} from "vue";
+  import * as Cronitor from "@cronitorio/cronitor-rum";
   const props = defineProps({
     protImageURL: String,
     deutImageURL: String,
@@ -8,6 +9,7 @@
   const isActive = ref(false);
   const toggle = () => {
     isActive.value = !isActive.value;
+    Cronitor.track('toggle-simulation');
   };
 </script>
 
@@ -40,7 +42,7 @@
       </div>
    </div>
 </template>
-    
+
 <style scoped>
   .button-container {
     position: relative;
