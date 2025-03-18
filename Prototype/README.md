@@ -1,7 +1,7 @@
 # Try it out
 # Hosted and Deployed
 ## 👉 [ColorSense](https://xiaojie-zhou.github.io/ColorSense/)
-
+### for the source code of the deployed version, see the [render](https://github.com/xiaojie-zhou/CS239-Visual-Accessibility/tree/render) branch
 # Local Development 
 Open **two** terminals for backend and frontend
 ## Backend
