@@ -1,7 +1,4 @@
 .idea
-.venv
 .DS_Store
 *.pyc
 .vscode
-Prototype/frontend/.env
-Prototype/backend/tokens.db
