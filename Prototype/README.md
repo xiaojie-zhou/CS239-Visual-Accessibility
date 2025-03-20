@@ -19,9 +19,11 @@ pip install -r requirements.txt
 
 ### Running
 ```
-flask --app app run
+flask run
 ```
 Ideally, the backend should be running on http://localhost:5000 
+
+*may take a while for the first time*
 #### Unless error, skip to the frontend section to run the frontend.
 
 If there is an error, make sure you are using the venv environment by checking python and flask paths:
