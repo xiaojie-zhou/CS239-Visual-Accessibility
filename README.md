@@ -8,7 +8,7 @@ Group Member: Tiffany Zhou, Xiaojie Zhou, Shanmu Wang
 
 [Final Report](CS_239_HCI_Final_Paper.pdf)
 
-[Try it out](Prototype/README.md)
+[Installation & Quick Start](Prototype/README.md)
 
 Here is some sample bar charts for input:
 [Sample Images](Prototype/backend/Algorithm/examples/demo)
