@@ -8,7 +8,7 @@ import uuid
 from Algorithm.simulate_colorblind import simulate_colorblind
 from Algorithm.evaluateFigure import evaluate_image
 import json
-from db import init_db, save_token, clear_tokens, get_filename_by_token
+from db import init_db, save_token, clear_token, get_filename_by_token
 
 app = Flask(__name__)
 CORS(app)
@@ -106,25 +106,21 @@ def get_preview():
 @app.route("/clear", methods=["POST"])
 def clear():
     # Clear the uploaded folder but keep .gitignore
-    for file in os.listdir(app.config["UPLOAD_FOLDER"]):
-        file_path = os.path.join(app.config["UPLOAD_FOLDER"], file)
-        if file != ".gitignore":  # Skip .gitignore
-            os.remove(file_path)
+    token = request.args.get("token")
+    filename = get_filename_by_token(token)
+    if not filename:
+        return jsonify({"error": "Invalid token"}), 400
+    file_paths = [os.path.join(app.config["UPLOAD_FOLDER"], filename + ".png"),
+                  os.path.join(app.config["OUTPUT_FOLDER"], filename + "_color_adjusted.png"),
+                  os.path.join(app.config["OUTPUT_FOLDER"], filename + "_hatched_bars.png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], filename + "_PROTAN.png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], filename + "_DEUTAN.png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], filename + "_TRITAN.png")]
+    for file in file_paths:
+        if os.path.exists(file):
+            os.remove(file)
 
-    # Below are not in the workflow, but for our own convenience
-    # Clear the output folder but keep .gitignore
-    for file in os.listdir(app.config["OUTPUT_FOLDER"]):
-        file_path = os.path.join(app.config["OUTPUT_FOLDER"], file)
-        if file != ".gitignore":
-            os.remove(file_path)
-
-    # Clear the simulated folder but keep .gitignore
-    for file in os.listdir(app.config["SIMULATED_FOLDER"]):
-        file_path = os.path.join(app.config["SIMULATED_FOLDER"], file)
-        if file != ".gitignore":
-            os.remove(file_path)
-
-    clear_tokens()
+    clear_token(token)
     return jsonify({"message": "All files cleared."}), 200
 
 @app.route("/get-result", methods=["GET"])

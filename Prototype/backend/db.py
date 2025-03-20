@@ -31,8 +31,16 @@ def get_filename_by_token(token):
     conn.close()
     return row[0] if row else None  # Return filename or None if token not found
 
+def clear_token(token):
+    """Delete a single token from the database"""
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("DELETE FROM tokens WHERE token = ?", (token,))
+    conn.commit()
+    conn.close()
+
 def clear_tokens():
-    """Delete all tokens from the database"""
+    """Not used. Delete all tokens from the database. For our convenience."""
     conn = get_db_connection()
     c = conn.cursor()
     c.execute("DELETE FROM tokens")  # Deletes all rows
