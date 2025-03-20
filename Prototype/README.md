@@ -52,6 +52,7 @@ npm install
 npm run dev
 ```
 
+#### avoid uploading images with large file size, as the backend is hosted on a free tier server.
 # Notes for Deployment
 > - Deployed on gitHub Pages and Render
 > - Frontend: https://xiaojie-zhou.github.io/ColorSense/
