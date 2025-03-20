@@ -10,7 +10,7 @@
 docker compose up
 ```
 
-## Or, Manual Installation
+## Or, Manual Installation (if docker doesn't work)
 Open **two** terminals for backend and frontend
 ## Backend
 Assuming python 3.12 is already installed
@@ -66,3 +66,5 @@ npm install
 ```
 npm run dev
 ```
+
+### If none of the above works, please DM Jay.
