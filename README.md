@@ -4,6 +4,7 @@
 
 Group Member: Tiffany Zhou, Xiaojie Zhou, Shanmu Wang
 
+[Poster](CS%20239%20HCI%20Poster.pdf)
 
 [Try it out](Prototype/README.md)
 
