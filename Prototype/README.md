@@ -7,7 +7,7 @@
 ## Using Docker (recommended)
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 ## Or, Manual Installation (if docker doesn't work)
