@@ -8,13 +8,14 @@
 
 <script setup>
 import axios from "axios";
+import API_URL from "@config";
   const props = defineProps({
     token:  String
   });
   const emit = defineEmits(["clear"]);
   const handleClick = async () => {
     try {
-      await axios.post(`http://127.0.0.1:5000/clear?token=${props.token}`);
+      await axios.post(`${API_URL}/clear?token=${props.token}`);
       console.log("Files cleared successfully.");
       emit("clear"); // Notify parent to clear UI
     } catch (error) {

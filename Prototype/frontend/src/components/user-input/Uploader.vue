@@ -21,6 +21,7 @@
 import { ref, defineEmits } from "vue";
 import axios from "axios";
 import ClearUploadBtn from "./ClearUploadBtn.vue";
+import API_URL from "@config";
 
 const file = ref(null);
 const uploadedImage = ref(null);
@@ -47,7 +48,7 @@ const uploadFile = async () => {
 
   try {
     // post the image
-    const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
+    const response = await axios.post(`${API_URL}/upload`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     if (!response.data.image) {
@@ -57,7 +58,7 @@ const uploadFile = async () => {
     // alert("File uploaded successfully!");
 
     // get the preview
-    const imageResponse = await axios.get(`http://127.0.0.1:5000/get-preview?token=${response.data.image}`, {
+    const imageResponse = await axios.get(`${API_URL}/get-preview?token=${response.data.image}`, {
       responseType: "blob",
     });
     uploadedImage.value = URL.createObjectURL(imageResponse.data);

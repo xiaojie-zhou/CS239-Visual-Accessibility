@@ -19,9 +19,9 @@ pip install -r requirements.txt
 
 ### Running
 ```
-flask run
+python app.py
 ```
-Ideally, the backend should be running on http://localhost:5000 
+Ideally, the backend should be running on http://localhost:5001 
 
 *may take a while for the first time*
 #### Unless error, skip to the frontend section to run the frontend.
@@ -42,6 +42,11 @@ conda deactivate
 Assuming [Node.js](https://nodejs.org/en) is installed, also using virtual environment
 
 ### Installation
+
+**Create a .env file in the frontend folder with the following content:**
+VITE_API_URL=http://127.0.0.1:5001
+
+Then run:
 ```
 cd Prototype/frontend
 python3.12 -m venv .venv

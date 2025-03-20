@@ -11,13 +11,14 @@
         </p>
       </slot>
     </button>
-    
+
     <div v-if="error" class="error">{{ error }}</div>
   </template>
 
 <script setup>
   import { ref, watch } from 'vue';
   import axios from 'axios';
+  import API_URL from "@config";
 
   // Props
   const props = defineProps({
@@ -46,7 +47,7 @@
   const simuProtImage = ref(null);
   const simuDeutImage = ref(null);
   const simuTritImage = ref(null);
-  
+
   // Function to fetch score and images
   const fetchData = async () => {
     if (!props.token) {
@@ -56,26 +57,26 @@
 
     loading.value = true;
     error.value = null;
-  
+
     try {
       // Fetch Score
-      const scoreResponse = await axios.get(`http://127.0.0.1:5000/get-score?token=${props.token}`);
+      const scoreResponse = await axios.get(`${API_URL}/get-score?token=${props.token}`);
       const calculatedScore = scoreResponse.data.score;
       console.log("[GenerateBtn]: fetched score = "+calculatedScore);
 
       // fetch result only if score < 90
       if (calculatedScore < 90) {
         const [imageResponse, protResponse, deutResponse, tritResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:5000/get-result?token=${props.token}&color=${currentColor.value}`, {
+          axios.get(`${API_URL}/get-result?token=${props.token}&color=${currentColor.value}`, {
             responseType: "blob",
           }),
-          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=prot`, {
+          axios.get(`${API_URL}/get-simulation?token=${props.token}&color=prot`, {
             responseType: "blob",
           }),
-          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=deut`, {
+          axios.get(`${API_URL}/get-simulation?token=${props.token}&color=deut`, {
             responseType: "blob",
           }),
-          axios.get(`http://127.0.0.1:5000/get-simulation?token=${props.token}&color=trit`, {
+          axios.get(`${API_URL}/get-simulation?token=${props.token}&color=trit`, {
             responseType: "blob",
           })
         ]);
