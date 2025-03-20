@@ -106,26 +106,35 @@ def get_preview():
 
 @app.route("/clear", methods=["POST"])
 def clear():
-    # Clear the uploaded folder but keep .gitignore
-    for file in os.listdir(app.config["UPLOAD_FOLDER"]):
-        file_path = os.path.join(app.config["UPLOAD_FOLDER"], file)
-        if file != ".gitignore":  # Skip .gitignore
-            os.remove(file_path)
+    token = request.args.get("token")
+    if token not in file_store:
+        return jsonify({"error": "Invalid token"}), 400
 
-    # Below are not in the workflow, but for our own convenience
-    # Clear the output folder but keep .gitignore
-    for file in os.listdir(app.config["OUTPUT_FOLDER"]):
-        file_path = os.path.join(app.config["OUTPUT_FOLDER"], file)
-        if file != ".gitignore":
-            os.remove(file_path)
+    file_paths = [os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], file_store[token]+"_PROTAN.png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], file_store[token]+"_DEUTAN.png"),
+                  os.path.join(app.config["SIMULATED_FOLDER"], file_store[token]+"_TRITAN.png"),
+                  os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_color_adjusted.png"),
+                  os.path.join(app.config["OUTPUT_FOLDER"], file_store[token]+"_hatched_bars.png")]
+    for file in file_paths:
+        if os.path.exists(file):
+            os.remove(file)
+    del file_store[token]
 
-    # Clear the simulated folder but keep .gitignore
-    for file in os.listdir(app.config["SIMULATED_FOLDER"]):
-        file_path = os.path.join(app.config["SIMULATED_FOLDER"], file)
-        if file != ".gitignore":
-            os.remove(file_path)
 
-    file_store.clear()
+    # # Below are not in the workflow, but for our own convenience
+    # # Clear the output folder but keep .gitignore
+    # for file in os.listdir(app.config["OUTPUT_FOLDER"]):
+    #     file_path = os.path.join(app.config["OUTPUT_FOLDER"], file)
+    #     if file != ".gitignore":
+    #         os.remove(file_path)
+    #
+    # # Clear the simulated folder but keep .gitignore
+    # for file in os.listdir(app.config["SIMULATED_FOLDER"]):
+    #     file_path = os.path.join(app.config["SIMULATED_FOLDER"], file)
+    #     if file != ".gitignore":
+    #         os.remove(file_path)
+    # file_store.clear()
     return jsonify({"message": "All files cleared."}), 200
 
 @app.route("/get-result", methods=["GET"])
@@ -159,12 +168,9 @@ def get_result():
         print(output_path)
         return jsonify({"error": "Image not generated. Should not happen."}), 500
 
-
-
 def simulate(token):
     file_path = os.path.join(app.config["UPLOAD_FOLDER"], file_store[token]+".png")
     simulate_colorblind(file_path, output_folder=app.config["SIMULATED_FOLDER"])
-
 
 @app.route("/get-simulation", methods=["GET"])
 def get_simulation():
@@ -210,7 +216,6 @@ def get_score():
         return jsonify({"score": score}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to evaluate graph: {str(e)}"}), 500
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

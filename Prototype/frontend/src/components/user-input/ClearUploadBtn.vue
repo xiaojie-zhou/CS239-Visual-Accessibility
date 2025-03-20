@@ -1,17 +1,20 @@
 <template>
-    <button 
-      class="button" 
+    <button
+      class="button"
       @click="handleClick">
       <img src="@/components/icons/trash-black.svg" class="icon" alt="Download Icon" />
     </button>
   </template>
-  
+
 <script setup>
-import axios from "axios"; 
+import axios from "axios";
+  const props = defineProps({
+    token:  String
+  });
   const emit = defineEmits(["clear"]);
   const handleClick = async () => {
     try {
-      await axios.post("http://127.0.0.1:5000/clear");
+      await axios.post(`http://127.0.0.1:5000/clear?token=${props.token}`);
       console.log("Files cleared successfully.");
       emit("clear"); // Notify parent to clear UI
     } catch (error) {
@@ -19,7 +22,7 @@ import axios from "axios";
     }
   };
 </script>
-  
+
   <style scoped>
    .button {
     width: 80px;

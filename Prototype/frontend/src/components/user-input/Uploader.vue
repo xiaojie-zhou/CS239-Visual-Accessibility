@@ -12,7 +12,7 @@
   <div v-else class="upload-box">
     <img :src="uploadedImage" alt="Uploaded Image" />
     <div class="clear-btn-container">
-      <ClearUploadBtn @clear="clearUpload" />
+      <ClearUploadBtn @clear="clearUpload" :token="imageToken"/>
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ const uploadFile = async () => {
 
     // emit token after successful upload
     imageToken.value = response.data.image;
-    emit("image-uploaded", imageToken.value); 
+    emit("image-uploaded", imageToken.value);
 
   } catch (error) {
     console.error("Upload error:", error);
@@ -76,7 +76,7 @@ const clearUpload = () => {
   uploadedImage.value = null;
   // emit null token when image is cleared
   imageToken.value = null;
-  emit("image-uploaded", imageToken.value); 
+  emit("image-uploaded", imageToken.value);
 };
 
 </script>
