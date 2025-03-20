@@ -12,7 +12,7 @@
   <div v-else class="upload-box">
     <img :src="uploadedImage" alt="Uploaded Image" />
     <div class="clear-btn-container">
-      <ClearUploadBtn @clear="clearUpload" />
+      <ClearUploadBtn @clear="clearUpload" :token="imageToken"/>
     </div>
   </div>
 </template>

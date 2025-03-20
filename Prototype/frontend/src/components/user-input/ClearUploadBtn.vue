@@ -9,11 +9,12 @@
 <script setup>
 import axios from "axios";
 import API_URL from "@/config.js"; // Import API URL
+    token:  String
+  });
   const emit = defineEmits(["clear"]);
-
   const handleClick = async () => {
     try {
-      await axios.post(`${API_URL}/clear`);
+      await axios.post(`${API_URL}/clear?token=${props.token}`);
       console.log("Files cleared successfully.");
       emit("clear"); // Notify parent to clear UI
     } catch (error) {
