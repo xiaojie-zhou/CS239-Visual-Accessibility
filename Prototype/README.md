@@ -3,6 +3,14 @@
 ## 👉 [ColorSense](https://xiaojie-zhou.github.io/ColorSense/)
 ### for the source code of the deployed version, see the [render](https://github.com/xiaojie-zhou/CS239-Visual-Accessibility/tree/render) branch
 # Local Development 
+
+## Using Docker (recommended)
+
+```bash
+docker compose up
+```
+
+## Or, Manual Installation
 Open **two** terminals for backend and frontend
 ## Backend
 Assuming python 3.12 is already installed
