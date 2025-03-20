@@ -9,6 +9,7 @@
 <script setup>
 import axios from "axios";
 import API_URL from "@/config.js"; // Import API URL
+  const props = defineProps({
     token:  String
   });
   const emit = defineEmits(["clear"]);
