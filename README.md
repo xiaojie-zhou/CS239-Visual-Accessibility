@@ -6,6 +6,8 @@ Group Member: Tiffany Zhou, Xiaojie Zhou, Shanmu Wang
 
 [Poster](CS%20239%20HCI%20Poster.pdf)
 
+[Final Report](CS_239_HCI_Final_Paper.pdf)
+
 [Try it out](Prototype/README.md)
 
 Here is some sample bar charts for input:
