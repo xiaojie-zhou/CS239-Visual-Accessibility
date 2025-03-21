@@ -7,6 +7,7 @@
 ## Using Docker (recommended)
 
 ```bash
+cd Prototype
 docker compose up --build
 ```
 
