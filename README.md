@@ -6,6 +6,9 @@ Group Member: Tiffany Zhou, Xiaojie Zhou, Shanmu Wang
 
 [Poster](CS%20239%20HCI%20Poster.pdf)
 
+
+[A Fun Video](https://youtube.com/shorts/xkaLtc5sKAM)
+
 [Final Report](CS_239_HCI_Final_Paper.pdf)
 
 [Installation & Quick Start](Prototype/README.md)
